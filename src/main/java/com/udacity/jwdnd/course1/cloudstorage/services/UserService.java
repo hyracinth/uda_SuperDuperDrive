@@ -17,6 +17,14 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
+    public User getUser(String username) {
+        return userMapper.getUser(username);
+    }
+
+    public boolean isUserAvailable(String username) {
+        return userMapper.getUser(username) == null;
+    }
+
     public int createUser(User user) {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
