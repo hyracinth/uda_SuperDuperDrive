@@ -26,28 +26,26 @@ public class SignupController {
 
     @PostMapping
     public String postSignupUser(@ModelAttribute User user, Model model) {
-        String signupErrorMsg = null;
+        String signupFailMsg = null;
 
         // Check if username available
         if(!_userService.isUserAvailable(user.getUsername())) {
-            signupErrorMsg = "Username not available. Please choose another";
+            signupFailMsg = "Username not available. Please choose another";
         }
 
         // Try to add user
-        if(signupErrorMsg == null) {
+        if(signupFailMsg == null) {
             int rowsAdded =_userService.createUser(user);
             if (rowsAdded < 0) {
-                signupErrorMsg = "There was an error during sign up, please try again.";
+                signupFailMsg = "There was an error during sign up, please try again.";
             }
         }
 
-        System.out.println(signupErrorMsg);
-
-        if(signupErrorMsg == null) {
+        if(signupFailMsg == null) {
             model.addAttribute("signupSuccess", true);
         }
         else {
-            model.addAttribute("signupFailMsg", signupErrorMsg);
+            model.addAttribute("signupFailMsg", signupFailMsg);
         }
 
         return "signup";
