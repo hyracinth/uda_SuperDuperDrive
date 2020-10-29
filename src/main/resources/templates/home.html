@@ -84,12 +84,13 @@
                                     <tr th:each="currNote : ${listNotes}">
                                         <td>
                                             <button type="button" class="btn btn-success">Edit</button>
-                                            <form method="POST" th:action="@{/home}">
+                                            <a th:href="@{/home/deleteNote(noteId=${currNote.getNoteId()})}" class="btn btn-danger">Delete</a>
+                                            <!--<form method="POST" th:action="@{/home}">
                                                 <button th:name="deleteNote" th:value="${currNote.getNoteId()}" type="submit" class="btn btn-danger">Delete</button>
-                                            </form>
+                                            </form>-->
                                         </td>
-                                        <th scope="row" th:text="${currNote.noteTitle}"></th>
-                                        <td th:text="${currNote.noteDescription}"></td>
+                                        <th scope="row" th:text="${currNote.getNoteId()}"></th>
+                                        <td th:text="${currNote.getNoteDescription()}"></td>
                                     </tr>
                                 </tbody>
                             </table>

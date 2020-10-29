@@ -14,8 +14,8 @@ public interface NoteMapper {
     @Options(useGeneratedKeys = true, keyProperty = "noteId")
     int insertNote(Note note);
 
-    @Delete("DELETE FROM NOTES WHERE noteid=#{userId}")
-    void deleteNote(Integer userId);
+    @Delete("DELETE FROM NOTES WHERE noteid=#{noteId}")
+    void deleteNote(Integer noteId);
 }
 
 // TODO Do not allow for duplicate file names

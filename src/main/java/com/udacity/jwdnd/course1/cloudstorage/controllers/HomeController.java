@@ -1,7 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
 import com.udacity.jwdnd.course1.cloudstorage.models.Note;
-import com.udacity.jwdnd.course1.cloudstorage.models.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
@@ -9,9 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping("/home")
@@ -29,6 +25,7 @@ public class HomeController {
 
     @GetMapping
     public String getHomePage(@ModelAttribute(NEW_NOTE) Note newNote, Authentication auth, Model model) {
+        model.addAttribute(LIST_NOTES, _noteService.getNotes(auth.getName()));
         return "home";
     }
 
@@ -44,9 +41,10 @@ public class HomeController {
         return "home";
     }
 
-    // TODO Fix delete button location
+    // TODO Fix delete button location (use href?)
     @PostMapping(params = "deleteNote")
-    public String deleteNote(@ModelAttribute(NEW_NOTE) Note newNote, @RequestParam("deleteNote") Integer noteId, Authentication auth, Model model) {
+    public String deleteNote(@ModelAttribute(NEW_NOTE) Note newNote, @RequestParam("noteId") Integer noteId, Authentication auth, Model model) {
+        System.out.println(noteId);
         _noteService.deleteNote(noteId);
 
         model.addAttribute(LIST_NOTES, _noteService.getNotes(auth.getName()));
@@ -57,12 +55,11 @@ public class HomeController {
 /*
 Questions:
 th:action="@{/home}" vs th:action="@{'/home'}"
-
-
- */
+action vs href
+*/
 
 /*
 Notes:
-Need to add an empty model for getmapping for form
+Need to add an empty model for getMapping for form
     otherwise will complain regarding missing properties
  */
