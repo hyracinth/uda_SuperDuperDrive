@@ -18,8 +18,23 @@ public class FileService {
         return _fileMapper.getFiles(username);
     }
 
+    public File getFile(Integer fileId) {
+        return _fileMapper.getFile(fileId);
+    }
+
     public Boolean uploadFile(File fileIn) {
         int result = _fileMapper.insertFile(fileIn);
         return result > 0;
+    }
+
+    public Boolean deleteFile(Integer fileId) {
+        try {
+            _fileMapper.deleteFile(fileId);
+            return true;
+        } catch(Exception e) {
+            //TODO Log?
+            System.out.println("Deleted failed");
+            return false;
+        }
     }
 }

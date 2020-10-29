@@ -5,6 +5,8 @@ import com.udacity.jwdnd.course1.cloudstorage.models.Note;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class HomeController {
@@ -40,8 +44,10 @@ public class HomeController {
         return "home";
     }
 
+    // TODO handle file errors
     @GetMapping("/result")
-    public String result(@RequestParam(name = "isSuccess") Boolean isSuccess, Model model) {
+    public String result(@RequestParam(name = "isSuccess") Boolean isSuccess,
+                         Model model) {
         model.addAttribute("isSuccess", isSuccess);
         return "result";
     }
@@ -58,20 +64,25 @@ public class HomeController {
     }
 
     @GetMapping("/deleteNote/{noteId}")
-    public String deleteNote(@PathVariable Integer noteId, Authentication auth, Model model) {
+    public String deleteNote(@ModelAttribute(NEW_NOTE) Note newNote,
+                             @PathVariable Integer noteId,
+                             Authentication auth,
+                             Model model) {
         Boolean result = _noteService.deleteNote(noteId);
-
         model.addAttribute(LIST_NOTES, _noteService.getNotes(auth.getName()));
         return "redirect:/result?isSuccess=" + result;
     }
 
     @PostMapping(value = "/files/upload")
-    public String uploadFile(@RequestParam("fileUpload") MultipartFile fileIn, Authentication auth, Model model) throws IOException {
+    public String uploadFile(@ModelAttribute(NEW_NOTE) Note newNote,
+                             @RequestParam("fileUpload") MultipartFile fileIn,
+                             Authentication auth,
+                             Model model) throws IOException {
         if(fileIn.isEmpty()) {
             return "redirect:/result?isSuccess=" + false;
         }
 
-        _fileService.uploadFile(new File(
+        Boolean result = _fileService.uploadFile(new File(
             null,
                 fileIn.getOriginalFilename(),
                 fileIn.getContentType(),
@@ -80,8 +91,31 @@ public class HomeController {
                 fileIn.getBytes()));
 
         model.addAttribute(LIST_FILES, _fileService.getFiles(auth.getName()));
-        return "home";
+        return "redirect:/result?isSuccess=" + result;
     }
+
+    @GetMapping("/files/delete/{fileId}")
+    public String deleteFile(@PathVariable Integer fileId,
+                             Authentication auth,
+                             Model model) {
+        Boolean result = _fileService.deleteFile(fileId);
+        model.addAttribute(LIST_FILES, _fileService.getFiles(auth.getName()));
+        return "redirect:/result?isSuccess=" + result;
+    }
+
+    @GetMapping("/files/download/{fileId}")
+    public ResponseEntity download(@PathVariable Integer fileId,
+                                   Authentication auth,
+                                   Model model){
+        File selectedFile = _fileService.getFile(fileId);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + selectedFile.getFilename() + "\"")
+                .body(selectedFile);
+    }
+
+    // TODO implement view in another window?
+
 }
 
 /*
