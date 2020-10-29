@@ -58,7 +58,7 @@ public class HomeController {
     }
 
     @GetMapping("/deleteNote/{noteId}")
-    public String deleteNote(@ModelAttribute(NEW_NOTE) Note newNote, @PathVariable Integer noteId, Authentication auth, Model model) {
+    public String deleteNote(@PathVariable Integer noteId, Authentication auth, Model model) {
         Boolean result = _noteService.deleteNote(noteId);
 
         model.addAttribute(LIST_NOTES, _noteService.getNotes(auth.getName()));
@@ -66,7 +66,7 @@ public class HomeController {
     }
 
     @PostMapping(value = "/files/upload")
-    public String uploadFile(@ModelAttribute(NEW_NOTE) Note newNote, @RequestParam("fileUpload") MultipartFile fileIn, Authentication auth, Model model) throws IOException {
+    public String uploadFile(@RequestParam("fileUpload") MultipartFile fileIn, Authentication auth, Model model) throws IOException {
         if(fileIn.isEmpty()) {
             return "redirect:/result?isSuccess=" + false;
         }
