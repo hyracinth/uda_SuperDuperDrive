@@ -14,11 +14,16 @@ public class NoteService {
         this._noteMapper = _noteMapper;
     }
 
+    public List<Note> getNotes(String username) {
+        return _noteMapper.getNotes(username);
+    }
+
     public void addNote(Note note) {
         _noteMapper.insertNote(note);
     }
 
-    public List<Note> getNotes(String username) {
-        return _noteMapper.getNotes(username);
+    public void deleteNote(Integer noteId) {
+        _noteMapper.deleteNote(noteId);
     }
+
 }

@@ -68,11 +68,11 @@
                             + Add a New Note
                         </button>
 
-                        <div  class="table-responsive">
+                        <div class="table-responsive">
                             <div th:if="${#lists.isEmpty(listNotes)}">
                                 There are no notes. Create some!
                             </div>
-                            <table  th:if="${not #lists.isEmpty(listNotes)}" class="table table-striped" id="userTable">
+                            <table th:if="${not #lists.isEmpty(listNotes)}" class="table table-striped" id="userTable">
                                 <thead>
                                     <tr>
                                         <th style="width: 20%" scope="col"></th>
@@ -84,7 +84,9 @@
                                     <tr th:each="currNote : ${listNotes}">
                                         <td>
                                             <button type="button" class="btn btn-success">Edit</button>
-                                            <a class="btn btn-danger">Delete</a>
+                                            <form method="POST" th:action="@{/home}">
+                                                <button th:name="deleteNote" th:value="${currNote.getNoteId()}" type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
                                         </td>
                                         <th scope="row" th:text="${currNote.noteTitle}"></th>
                                         <td th:text="${currNote.noteDescription}"></td>
@@ -103,7 +105,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form th:object="${newNote}" th:action="@{'/home'}" method="POST">
+                                        <form th:object="${newNote}" th:action="@{/home}" method="POST">
                                             <input type="hidden" name="noteId" id="note-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
@@ -113,7 +115,7 @@
                                                 <label for="note-description" class="col-form-label">Description</label>
                                                 <textarea th:field="*{noteDescription}" class="form-control" name="noteDescription" id="note-description" rows="5" maxlength="1000" required></textarea>
                                             </div>
-                                            <button id="noteSubmit" type="submit" class="d-none"></button>
+                                            <button th:name="createNote" id="noteSubmit" type="submit" class="d-none"></button>
                                         </form>
                                     </div>
                                     <div class="modal-footer">

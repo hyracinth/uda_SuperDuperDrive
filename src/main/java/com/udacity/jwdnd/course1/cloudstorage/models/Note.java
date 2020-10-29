@@ -24,4 +24,8 @@ public class Note {
     public Integer getUserId() {
         return userId;
     }
+
+    public Integer getNoteId() {
+        return noteId;
+    }
 }

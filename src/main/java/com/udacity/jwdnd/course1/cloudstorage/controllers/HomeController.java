@@ -7,10 +7,7 @@ import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -35,14 +32,24 @@ public class HomeController {
         return "home";
     }
 
-    @PostMapping
+    @PostMapping(params = "createNote")
     public String createNote(@ModelAttribute(NEW_NOTE) Note newNote, Authentication auth, Model model) {
         _noteService.addNote(new Note(null,
                 newNote.getNoteTitle(),
                 newNote.getNoteDescription(),
                 _userService.getUser(auth.getName()).getUserId()));
+
         model.addAttribute(LIST_NOTES, _noteService.getNotes(auth.getName()));
 
+        return "home";
+    }
+
+    // TODO Fix delete button location
+    @PostMapping(params = "deleteNote")
+    public String deleteNote(@ModelAttribute(NEW_NOTE) Note newNote, @RequestParam("deleteNote") Integer noteId, Authentication auth, Model model) {
+        _noteService.deleteNote(noteId);
+
+        model.addAttribute(LIST_NOTES, _noteService.getNotes(auth.getName()));
         return "home";
     }
 }
