@@ -25,11 +25,19 @@ public class User {
         return password;
     }
 
-    public String getFirstName() { return firstName; }
+    public String getFirstName() {
+        return firstName;
+    }
 
     public String getLastName() {
         return lastName;
     }
 
-    public String getSalt() { return salt; }
+    public String getSalt() {
+        return salt;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
 }
