@@ -18,12 +18,27 @@ public class NoteService {
         return _noteMapper.getNotes(username);
     }
 
-    public void addNote(Note note) {
-        _noteMapper.insertNote(note);
+    public Boolean createUpdateNote(Note note) {
+        int result;
+        if (note.getNoteId() != null) {
+            result = _noteMapper.updateNote(note);
+        }
+        else {
+            result = _noteMapper.insertNote(note);
+        }
+        System.out.println(result);
+        return result > 0;
     }
 
-    public void deleteNote(Integer noteId) {
-        _noteMapper.deleteNote(noteId);
+    public Boolean deleteNote(Integer noteId) {
+        try {
+            _noteMapper.deleteNote(noteId);
+            return true;
+        } catch(Exception e) {
+            //TODO Log?
+            System.out.println("Deleted failed");
+            return false;
+        }
     }
 
 }

@@ -28,26 +28,29 @@ public class HomeController {
         return "home";
     }
 
-    @PostMapping(value="/home", params = "createNote")
-    public String createNote(@ModelAttribute(NEW_NOTE) Note newNote, Authentication auth, Model model) {
-        _noteService.addNote(new Note(null,
+    @PostMapping(value = "/notes", params = "createUpdateNote")
+    public String createUpdateNote(@ModelAttribute(NEW_NOTE) Note newNote, Authentication auth, Model model) {
+        Boolean result = _noteService.createUpdateNote(new Note(newNote.getNoteId(),
                 newNote.getNoteTitle(),
                 newNote.getNoteDescription(),
                 _userService.getUser(auth.getName()).getUserId()));
 
         model.addAttribute(LIST_NOTES, _noteService.getNotes(auth.getName()));
-
-        return "home";
+        return "redirect:/result?isSuccess=" + result;
     }
 
-    // TODO Fix delete button location (use href?)
-    @GetMapping("deleteNote/{noteId}")
+    @GetMapping("/deleteNote/{noteId}")
     public String deleteNote(@ModelAttribute(NEW_NOTE) Note newNote, @PathVariable Integer noteId, Authentication auth, Model model) {
-        System.out.println(noteId);
-        _noteService.deleteNote(noteId);
+        Boolean result = _noteService.deleteNote(noteId);
 
         model.addAttribute(LIST_NOTES, _noteService.getNotes(auth.getName()));
-        return "home";
+        return "redirect:/result?isSuccess=" + result;
+    }
+
+    @GetMapping("/result")
+    public String result(@RequestParam(name = "isSuccess") Boolean isSuccess, Model model) {
+        model.addAttribute("isSuccess", isSuccess);
+        return "result";
     }
 }
 

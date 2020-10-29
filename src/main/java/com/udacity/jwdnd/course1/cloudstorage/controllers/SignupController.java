@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/signup")
 public class SignupController {
 
     private UserService _userService;
@@ -19,12 +18,12 @@ public class SignupController {
         this._userService = _userService;
     }
 
-    @GetMapping
+    @GetMapping("/signup")
     public String getSignupPage() {
         return "signup";
     }
 
-    @PostMapping
+    @PostMapping("/signup")
     public String postSignupUser(@ModelAttribute User user, Model model) {
         String signupFailMsg = null;
 
