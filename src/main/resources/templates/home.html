@@ -84,7 +84,8 @@
                                     <tr th:each="currNote : ${listNotes}">
                                         <td>
                                             <button type="button" class="btn btn-success">Edit</button>
-                                            <a th:href="@{/home/deleteNote(noteId=${currNote.getNoteId()})}" class="btn btn-danger">Delete</a>
+                                            <a name="deleteNoteButton" th:href="@{/deleteNote/{noteId}(noteId=${currNote.getNoteId()})}" class="btn btn-danger">Delete</a>
+                                            <!--<a th:href="@{/home/deleteNote(noteId=${currNote.getNoteId()})}" class="btn btn-danger">Delete</a>-->
                                             <!--<form method="POST" th:action="@{/home}">
                                                 <button th:name="deleteNote" th:value="${currNote.getNoteId()}" type="submit" class="btn btn-danger">Delete</button>
                                             </form>-->

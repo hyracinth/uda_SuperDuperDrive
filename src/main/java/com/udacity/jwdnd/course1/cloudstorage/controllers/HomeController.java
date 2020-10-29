@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Controller
-@RequestMapping("/home")
 public class HomeController {
     private final NoteService _noteService;
     private final UserService _userService;
@@ -23,13 +22,13 @@ public class HomeController {
         this._userService = _userService;
     }
 
-    @GetMapping
+    @GetMapping("/home")
     public String getHomePage(@ModelAttribute(NEW_NOTE) Note newNote, Authentication auth, Model model) {
         model.addAttribute(LIST_NOTES, _noteService.getNotes(auth.getName()));
         return "home";
     }
 
-    @PostMapping(params = "createNote")
+    @PostMapping(value="/home", params = "createNote")
     public String createNote(@ModelAttribute(NEW_NOTE) Note newNote, Authentication auth, Model model) {
         _noteService.addNote(new Note(null,
                 newNote.getNoteTitle(),
@@ -42,8 +41,8 @@ public class HomeController {
     }
 
     // TODO Fix delete button location (use href?)
-    @PostMapping(params = "deleteNote")
-    public String deleteNote(@ModelAttribute(NEW_NOTE) Note newNote, @RequestParam("noteId") Integer noteId, Authentication auth, Model model) {
+    @GetMapping("deleteNote/{noteId}")
+    public String deleteNote(@ModelAttribute(NEW_NOTE) Note newNote, @PathVariable Integer noteId, Authentication auth, Model model) {
         System.out.println(noteId);
         _noteService.deleteNote(noteId);
 
