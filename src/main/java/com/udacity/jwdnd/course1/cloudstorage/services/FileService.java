@@ -37,4 +37,14 @@ public class FileService {
             return false;
         }
     }
+
+    public Boolean doesFileExist(String filename, String username) {
+        List<File> listFiles = getFiles(username);
+        for(File currFile : listFiles) {
+            if(currFile.getFilename().equals(filename)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

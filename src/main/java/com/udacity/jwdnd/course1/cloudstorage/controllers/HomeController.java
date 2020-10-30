@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 public class HomeController {
@@ -46,14 +43,18 @@ public class HomeController {
 
     // TODO handle file errors
     @GetMapping("/result")
-    public String result(@RequestParam(name = "isSuccess") Boolean isSuccess,
+    public String result(@RequestParam(required = false, name = "isSuccess") Boolean isSuccess,
+                         @RequestParam(required = false, name = "errorType") Integer errorType,
                          Model model) {
         model.addAttribute("isSuccess", isSuccess);
+        model.addAttribute("errorType", errorType);
         return "result";
     }
 
     @PostMapping(value = "/notes", params = "createUpdateNote")
-    public String createUpdateNote(@ModelAttribute(NEW_NOTE) Note newNote, Authentication auth, Model model) {
+    public String createUpdateNote(@ModelAttribute(NEW_NOTE) Note newNote,
+                                   Authentication auth,
+                                   Model model) {
         Boolean result = _noteService.createUpdateNote(new Note(newNote.getNoteId(),
                 newNote.getNoteTitle(),
                 newNote.getNoteDescription(),
@@ -79,7 +80,11 @@ public class HomeController {
                              Authentication auth,
                              Model model) throws IOException {
         if(fileIn.isEmpty()) {
-            return "redirect:/result?isSuccess=" + false;
+            return "redirect:/result?isSuccess=" + false + "&errorType=1";
+        }
+
+        if(_fileService.doesFileExist(fileIn.getOriginalFilename(), auth.getName())) {
+            return "redirect:/result?isSuccess=" + false + "&errorType=2";
         }
 
         Boolean result = _fileService.uploadFile(new File(
