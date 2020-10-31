@@ -128,8 +128,6 @@ public class HomeController {
                 .body(selectedFile);
     }
 
-    // TODO implement view in another window?
-
     @PostMapping(value = "/credentials/createUpdateCredential")
     public String createUpdateCredential(@ModelAttribute(NEW_NOTE) Note newNote,
                                          @ModelAttribute(NEW_CRED)Credential newCred,
@@ -156,6 +154,10 @@ public class HomeController {
         return "redirect:/result?isSuccess=" + result;
     }
 }
+
+
+// TODO implement view in another window?
+// TODO implement remember active tabs
 
 /*
 Questions:

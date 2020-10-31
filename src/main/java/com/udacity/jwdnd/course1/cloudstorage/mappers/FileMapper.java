@@ -16,7 +16,7 @@ public interface FileMapper {
 
     @Insert("INSERT INTO FILES (filename, contenttype, filesize, filedata, userid) " +
             "VALUES (#{filename}, #{contentType}, #{fileSize}, #{fileData}, #{userId})")
-    @Options(useGeneratedKeys = true, keyProperty = "fileid")
+    @Options(useGeneratedKeys = true, keyProperty = "fileId")
     int insertFile(File fileIn);
 
     @Delete("DELETE FROM FILES WHERE fileid=#{fileId}")
