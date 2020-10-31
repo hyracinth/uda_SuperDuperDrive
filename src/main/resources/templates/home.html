@@ -87,7 +87,7 @@
                                     <tr th:each="currNote : ${listNotes}">
                                         <td>
                                             <button th:onclick="javascript: showNoteModal([[${currNote.noteId}]],[[${currNote.noteTitle}]],[[${currNote.noteDescription}]])"  type="button" class="btn btn-success">Edit</button>
-                                            <a name="deleteNoteButton" th:href="@{/deleteNote/{noteId}(noteId=${currNote.getNoteId()})}" class="btn btn-danger">Delete</a>
+                                            <a name="deleteNoteButton" th:href="@{/notes/delete/{noteId}(noteId=${currNote.getNoteId()})}" class="btn btn-danger">Delete</a>
                                         </td>
                                         <th scope="row" th:text="${currNote.getNoteTitle()}"></th>
                                         <td th:text="${currNote.getNoteDescription()}"></td>
@@ -148,7 +148,7 @@
                                 <tbody>
                                 <tr th:each="currCred : ${listCredentials}">
                                     <td>
-                                        <button type="button" class="btn btn-success">Edit</button>
+                                        <button th:onclick="javascript: showCredentialModal([[${currCred.getCredentialId()}]],[[${currCred.getUrl()}]],[[${currCred.getUsername()}]],[[${currCred.getPassword()}]])"  type="button" class="btn btn-success">Edit</button>
                                         <a th:href="@{/credentials/delete/{credId}(credId=${currCred.getCredentialId()})}" class="btn btn-danger">Delete</a>
                                     </td>
                                     <th th:text="${currCred.getUrl()}" scope="row">Example Credential URL</th>

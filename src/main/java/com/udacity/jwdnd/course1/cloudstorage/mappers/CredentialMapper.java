@@ -18,5 +18,13 @@ public interface CredentialMapper {
 
     @Delete("DELETE FROM CREDENTIALS WHERE credentialid=#{credId}")
     void deleteCredential(Integer credId);
+
+    @Select("SELECT * FROM CREDENTIALS WHERE credentialid=#{credId}")
+    Credential getCredential(Integer credId);
+
+    @Update("UPDATE CREDENTIALS " +
+            "SET url=#{url}, username=#{username}, password=#{password} " +
+            "WHERE credentialid=#{credentialId}")
+    int updateCredential(Credential cred);
 }
 

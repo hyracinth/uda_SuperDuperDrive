@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
+import javax.sound.midi.Soundbank;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -44,6 +45,9 @@ public class EncryptionService {
                 | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
             logger.error(e.getMessage());
         }
+
+        System.out.println("here");
+        System.out.println(data + "\t" + key + "\t" + decryptedValue);
 
         return new String(decryptedValue);
     }

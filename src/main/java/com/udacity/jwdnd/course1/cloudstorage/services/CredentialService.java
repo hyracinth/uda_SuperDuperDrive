@@ -38,15 +38,24 @@ public class CredentialService {
         }
     }
 
-    public Boolean insertCredential(Credential credIn) {
+    public Boolean createUpdateCredential(Credential credIn) {
+        Integer result = 0;
         SecureRandom random = new SecureRandom();
         byte[] key = new byte[16];
         random.nextBytes(key);
         String encodedKey = Base64.getEncoder().encodeToString(key);
         String encryptedPassword = _encryptionService.encryptValue(credIn.getPassword(), encodedKey);
+
         credIn.setKey(encodedKey);
         credIn.setPassword(encryptedPassword);
-        Integer result = this._credentialMapper.insertCredential(credIn);
+
+        if(credIn.getCredentialId() != null) {
+            result = this._credentialMapper.updateCredential(credIn);
+        }
+        else {
+            result = this._credentialMapper.insertCredential(credIn);
+        }
+
         return result > 0;
     }
 }

@@ -48,7 +48,6 @@ public class HomeController {
         return "home";
     }
 
-    // TODO handle file errors
     @GetMapping("/result")
     public String result(@RequestParam(required = false, name = "isSuccess") Boolean isSuccess,
                          @RequestParam(required = false, name = "errorType") Integer errorType,
@@ -71,7 +70,7 @@ public class HomeController {
         return "redirect:/result?isSuccess=" + result;
     }
 
-    @GetMapping("/deleteNote/{noteId}")
+    @GetMapping("/notes/delete/{noteId}")
     public String deleteNote(@ModelAttribute(NEW_NOTE) Note newNote,
                              @PathVariable Integer noteId,
                              Authentication auth,
@@ -133,11 +132,11 @@ public class HomeController {
                                          @ModelAttribute(NEW_CRED)Credential newCred,
                                          Authentication auth,
                                          Model model){
-        Boolean result = _credentialService.insertCredential(new Credential(
-                        null,
+        Boolean result = _credentialService.createUpdateCredential(new Credential(
+                        newCred.getCredentialId(),
                         newCred.getUrl(),
                         newCred.getUsername(),
-                        null,
+                        newCred.getKey(),
                         newCred.getPassword(),
                         _userService.getUser(auth.getName()).getUserId()));
 
