@@ -3,10 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controllers;
 import com.udacity.jwdnd.course1.cloudstorage.models.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.models.File;
 import com.udacity.jwdnd.course1.cloudstorage.models.Note;
-import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
-import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
-import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
-import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import com.udacity.jwdnd.course1.cloudstorage.services.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -23,6 +20,7 @@ public class HomeController {
     private final UserService _userService;
     private final FileService _fileService;
     private final CredentialService _credentialService;
+    private final EncryptionService _encryptService;
 
     private static final String NEW_NOTE = "newNote";
     private static final String NEW_CRED = "newCred";
@@ -30,11 +28,16 @@ public class HomeController {
     private static final String LIST_FILES = "listFiles";
     private static final String LIST_CREDENTIALS = "listCredentials";
 
-    public HomeController(NoteService _noteService, UserService _userService, FileService _fileService, CredentialService _credentialService) {
+    public HomeController(NoteService _noteService,
+                          UserService _userService,
+                          FileService _fileService,
+                          CredentialService _credentialService,
+                          EncryptionService _encryptService) {
         this._noteService = _noteService;
         this._userService = _userService;
         this._fileService = _fileService;
         this._credentialService = _credentialService;
+        this._encryptService = _encryptService;
     }
 
     @GetMapping("/home")
@@ -45,6 +48,7 @@ public class HomeController {
         model.addAttribute(LIST_NOTES, _noteService.getNotes(auth.getName()));
         model.addAttribute(LIST_FILES, _fileService.getFiles(auth.getName()));
         model.addAttribute(LIST_CREDENTIALS, _credentialService.getCredentials(auth.getName()));
+        model.addAttribute("_encryptionService", _encryptService);
         return "home";
     }
 

@@ -46,9 +46,6 @@ public class EncryptionService {
             logger.error(e.getMessage());
         }
 
-        System.out.println("here");
-        System.out.println(data + "\t" + key + "\t" + decryptedValue);
-
         return new String(decryptedValue);
     }
 }

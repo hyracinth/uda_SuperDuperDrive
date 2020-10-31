@@ -19,12 +19,7 @@ public class CredentialService {
     }
 
     public List<Credential> getCredentials (String username) {
-        List<Credential> listCreds = this._credentialMapper.getCredentials(username);
-        for(Credential currCred : listCreds) {
-            String decryptedPassword = _encryptionService.decryptValue(currCred.getPassword(), currCred.getKey());
-            currCred.setPassword(decryptedPassword);
-        }
-        return listCreds;
+        return this._credentialMapper.getCredentials(username);
     }
 
     public Boolean deleteCredential(Integer credId) {
