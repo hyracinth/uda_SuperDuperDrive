@@ -6,6 +6,8 @@ public class Note {
     private String noteDescription;
     private Integer userId;
 
+    public Note() {}
+
     public Note(Integer noteId, String noteTitle, String noteDescription, Integer userId) {
         this.noteId = noteId;
         this.noteTitle = noteTitle;
@@ -27,5 +29,21 @@ public class Note {
 
     public Integer getNoteId() {
         return noteId;
+    }
+
+    public void setNoteId(Integer noteId) {
+        this.noteId = noteId;
+    }
+
+    public void setNoteTitle(String noteTitle) {
+        this.noteTitle = noteTitle;
+    }
+
+    public void setNoteDescription(String noteDescription) {
+        this.noteDescription = noteDescription;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

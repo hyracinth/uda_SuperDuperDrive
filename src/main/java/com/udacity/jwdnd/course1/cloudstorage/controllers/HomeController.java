@@ -49,6 +49,7 @@ public class HomeController {
         model.addAttribute(LIST_FILES, fileService.getFiles(auth.getName()));
         model.addAttribute(LIST_CREDENTIALS, credentialService.getCredentials(auth.getName()));
         model.addAttribute("_encryptionService", encryptionService);
+        model.addAttribute(NEW_NOTE, new Note());
         return "home";
     }
 
@@ -75,8 +76,7 @@ public class HomeController {
     }
 
     @GetMapping("/notes/delete/{noteId}")
-    public String deleteNote(@ModelAttribute(NEW_NOTE) Note newNote,
-                             @PathVariable Integer noteId,
+    public String deleteNote(@PathVariable Integer noteId,
                              Authentication auth,
                              Model model) {
         Boolean result = noteService.deleteNote(noteId);
@@ -85,8 +85,7 @@ public class HomeController {
     }
 
     @PostMapping(value = "/files/upload")
-    public String uploadFile(@ModelAttribute(NEW_NOTE) Note newNote,
-                             @RequestParam("fileUpload") MultipartFile fileIn,
+    public String uploadFile(@RequestParam("fileUpload") MultipartFile fileIn,
                              Authentication auth,
                              Model model) throws IOException {
         if(fileIn.isEmpty()) {
@@ -129,8 +128,7 @@ public class HomeController {
     }
 
     @PostMapping(value = "/credentials/createUpdateCredential")
-    public String createUpdateCredential(@ModelAttribute(NEW_NOTE) Note newNote,
-                                         @ModelAttribute(NEW_CREDENTIAL)Credential newCred,
+    public String createUpdateCredential(@ModelAttribute(NEW_CREDENTIAL)Credential newCred,
                                          Authentication auth,
                                          Model model){
         Boolean result = credentialService.createUpdateCredential(new Credential(
