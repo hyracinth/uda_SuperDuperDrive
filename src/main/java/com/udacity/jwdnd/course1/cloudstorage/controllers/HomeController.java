@@ -37,7 +37,6 @@ public class HomeController {
             Model model) {
         model.addAttribute(LIST_NOTES, _noteService.getNotes(auth.getName()));
         model.addAttribute(LIST_FILES, _fileService.getFiles(auth.getName()));
-        model.addAttribute("newNote", new Note());
         return "home";
     }
 
@@ -49,10 +48,6 @@ public class HomeController {
 
     @PostMapping(value = "/notes", params = "createUpdateNote")
     public String createUpdateNote(@ModelAttribute(NEW_NOTE) Note newNote, Authentication auth, Model model) {
-
-        System.out.println(newNote.getNoteTitle());
-        System.out.println(newNote.getNoteDescription());
-
         Boolean result = _noteService.createUpdateNote(new Note(newNote.getNoteId(),
                 newNote.getNoteTitle(),
                 newNote.getNoteDescription(),
@@ -63,7 +58,7 @@ public class HomeController {
     }
 
     @GetMapping("/deleteNote/{noteId}")
-    public String deleteNote(@PathVariable Integer noteId, Authentication auth, Model model) {
+    public String deleteNote(@ModelAttribute(NEW_NOTE) Note newNote, @PathVariable Integer noteId, Authentication auth, Model model) {
         Boolean result = _noteService.deleteNote(noteId);
 
         model.addAttribute(LIST_NOTES, _noteService.getNotes(auth.getName()));
@@ -71,7 +66,7 @@ public class HomeController {
     }
 
     @PostMapping(value = "/files/upload")
-    public String uploadFile(@RequestParam("fileUpload") MultipartFile fileIn, Authentication auth, Model model) throws IOException {
+    public String uploadFile(@ModelAttribute(NEW_NOTE) Note newNote, @RequestParam("fileUpload") MultipartFile fileIn, Authentication auth, Model model) throws IOException {
         if(fileIn.isEmpty()) {
             return "redirect:/result?isSuccess=" + false;
         }
@@ -85,7 +80,6 @@ public class HomeController {
                 fileIn.getBytes()));
 
         model.addAttribute(LIST_FILES, _fileService.getFiles(auth.getName()));
-        model.addAttribute("newNote", new Note());
         return "home";
     }
 }
