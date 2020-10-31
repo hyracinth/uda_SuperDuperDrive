@@ -14,13 +14,14 @@
                 <h1 class="display-5">Success</h1>
                 <span>Your changes were successfully saved. Click <a th:href="@{/home}">here</a> to continue.</span>
             </div>
-            <div class="alert alert-danger fill-parent" th:if="${not isSuccess}">
+            <div class="alert alert-danger fill-parent" th:if="${not isSuccess && errorType == null}">
                 <h1 class="display-5">Error</h1>
                 <span>Your changes were not saved. Click <a th:href="@{/home}">here</a> to continue.</span>
             </div>
-            <div class="alert alert-danger fill-parent" th:if="${not isSuccess}">
+            <div class="alert alert-danger fill-parent" th:if="${not isSuccess && (errorType == 1 || errorType == 2)}">
                 <h1 class="display-5">Error</h1>
-                <span>Example Error Message</span>
+                <span th:if="${errorType == 1}">Cannot upload empty files!</span>
+                <span th:if="${errorType == 2}">Filename already exists!</span>
                 <span>Click <a th:href="@{/home}">here</a> to continue.</span>
             </div>
         </div>

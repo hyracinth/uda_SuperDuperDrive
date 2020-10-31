@@ -18,8 +18,33 @@ public class FileService {
         return _fileMapper.getFiles(username);
     }
 
+    public File getFile(Integer fileId) {
+        return _fileMapper.getFile(fileId);
+    }
+
     public Boolean uploadFile(File fileIn) {
         int result = _fileMapper.insertFile(fileIn);
         return result > 0;
+    }
+
+    public Boolean deleteFile(Integer fileId) {
+        try {
+            _fileMapper.deleteFile(fileId);
+            return true;
+        } catch(Exception e) {
+            //TODO Log?
+            System.out.println("Delete failed");
+            return false;
+        }
+    }
+
+    public Boolean doesFileExist(String filename, String username) {
+        List<File> listFiles = getFiles(username);
+        for(File currFile : listFiles) {
+            if(currFile.getFilename().equals(filename)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

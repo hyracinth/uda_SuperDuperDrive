@@ -55,8 +55,9 @@
                                 <tbody>
                                 <tr th:each="currFile : ${listFiles}">
                                     <td>
-                                        <a target="_blank" class="btn btn-success">View</a>
-                                        <a  class="btn btn-danger">Delete</a>
+                                        <!--<a target="_blank" class="btn btn-success">View</a>-->
+                                        <a th:href="@{/files/download/{fileId}(fileId=${currFile.getFileId()})}"class="btn btn-success">Download</a>
+                                        <a th:href="@{/files/delete/{fileId}(fileId=${currFile.getFileId()})}" class="btn btn-danger">Delete</a>
                                     </td>
                                     <th th:text="${currFile.getFilename()}" scope="row">ExampleFile.txt</th>
                                     <td th:text="${currFile.getFileSize()}">ExampleFile.txt</td>
@@ -85,8 +86,8 @@
                                 <tbody>
                                     <tr th:each="currNote : ${listNotes}">
                                         <td>
-                                            <button  th:onclick="javascript: showNoteModal([[${currNote.noteId}]],[[${currNote.noteTitle}]],[[${currNote.noteDescription}]])"  type="button" class="btn btn-success">Edit</button>
-                                            <a name="deleteNoteButton" th:href="@{/deleteNote/{noteId}(noteId=${currNote.getNoteId()})}" class="btn btn-danger">Delete</a>
+                                            <button th:onclick="javascript: showNoteModal([[${currNote.noteId}]],[[${currNote.noteTitle}]],[[${currNote.noteDescription}]])"  type="button" class="btn btn-success">Edit</button>
+                                            <a name="deleteNoteButton" th:href="@{/notes/delete/{noteId}(noteId=${currNote.getNoteId()})}" class="btn btn-danger">Delete</a>
                                         </td>
                                         <th scope="row" th:text="${currNote.getNoteTitle()}"></th>
                                         <td th:text="${currNote.getNoteDescription()}"></td>
@@ -132,7 +133,10 @@
                         </button>
 
                         <div class="table-responsive">
-                            <table class="table table-striped" th:object="${credentials}" id="credentialTable">
+                            <div th:if="${#lists.isEmpty(listCredentials)}">
+                                There are no credentials saved. Save some!
+                            </div>
+                            <table th:if="${not #lists.isEmpty(listCredentials)}" class="table table-striped" id="credentialTable">
                                 <thead>
                                     <tr>
                                         <th style="width: 20%" scope="col"></th>
@@ -142,14 +146,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr th:each="currCred : ${listCredentials}">
                                     <td>
-                                        <button type="button" class="btn btn-success">Edit</button>
-                                        <a class="btn btn-danger">Delete</a>
+                                        <button th:onclick="javascript: showCredentialModal([[${currCred.getCredentialId()}]],[[${currCred.getUrl()}]],[[${currCred.getUsername()}]],[[${_encryptionService.decryptValue(currCred.getPassword(), currCred.getKey())}]])"  type="button" class="btn btn-success">Edit</button>
+                                        <a th:href="@{/credentials/delete/{credId}(credId=${currCred.getCredentialId()})}" class="btn btn-danger">Delete</a>
                                     </td>
-                                    <th scope="row">Example Credential URL</th>
-                                    <td>Example Credential Username</td>
-                                    <td>Example Credential Password</td>
+                                    <th th:text="${currCred.getUrl()}" scope="row">Example Credential URL</th>
+                                    <td th:text="${currCred.getUsername()}">Example Credential Username</td>
+                                    <td th:text="${currCred.getPassword()}">Example Credential Password</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -165,7 +169,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" method="POST">
+                                        <form th:object="${newCred}" th:action="@{/credentials/createUpdateCredential}" method="POST">
                                             <input type="hidden" name="credentialId" id="credential-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">URL</label>
