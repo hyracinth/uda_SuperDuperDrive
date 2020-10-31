@@ -37,6 +37,7 @@ public class HomeController {
             Model model) {
         model.addAttribute(LIST_NOTES, _noteService.getNotes(auth.getName()));
         model.addAttribute(LIST_FILES, _fileService.getFiles(auth.getName()));
+        model.addAttribute("newNote", new Note());
         return "home";
     }
 
@@ -48,6 +49,10 @@ public class HomeController {
 
     @PostMapping(value = "/notes", params = "createUpdateNote")
     public String createUpdateNote(@ModelAttribute(NEW_NOTE) Note newNote, Authentication auth, Model model) {
+
+        System.out.println(newNote.getNoteTitle());
+        System.out.println(newNote.getNoteDescription());
+
         Boolean result = _noteService.createUpdateNote(new Note(newNote.getNoteId(),
                 newNote.getNoteTitle(),
                 newNote.getNoteDescription(),
@@ -72,7 +77,7 @@ public class HomeController {
         }
 
         _fileService.uploadFile(new File(
-            null,
+                null,
                 fileIn.getOriginalFilename(),
                 fileIn.getContentType(),
                 String.valueOf(fileIn.getSize()),
@@ -80,6 +85,7 @@ public class HomeController {
                 fileIn.getBytes()));
 
         model.addAttribute(LIST_FILES, _fileService.getFiles(auth.getName()));
+        model.addAttribute("newNote", new Note());
         return "home";
     }
 }
