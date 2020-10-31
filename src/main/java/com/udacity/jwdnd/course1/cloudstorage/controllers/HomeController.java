@@ -1,7 +1,9 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
+import com.udacity.jwdnd.course1.cloudstorage.models.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.models.File;
 import com.udacity.jwdnd.course1.cloudstorage.models.Note;
+import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
@@ -20,15 +22,19 @@ public class HomeController {
     private final NoteService _noteService;
     private final UserService _userService;
     private final FileService _fileService;
+    private final CredentialService _credentialService;
 
     private static final String NEW_NOTE = "newNote";
+    private static final String NEW_CRED = "newCred";
     private static final String LIST_NOTES = "listNotes";
     private static final String LIST_FILES = "listFiles";
+    private static final String LIST_CREDENTIALS = "listCredentials";
 
-    public HomeController(NoteService _noteService, UserService _userService, FileService _fileService) {
+    public HomeController(NoteService _noteService, UserService _userService, FileService _fileService, CredentialService _credentialService) {
         this._noteService = _noteService;
         this._userService = _userService;
         this._fileService = _fileService;
+        this._credentialService = _credentialService;
     }
 
     @GetMapping("/home")
@@ -38,6 +44,7 @@ public class HomeController {
             Model model) {
         model.addAttribute(LIST_NOTES, _noteService.getNotes(auth.getName()));
         model.addAttribute(LIST_FILES, _fileService.getFiles(auth.getName()));
+        model.addAttribute(LIST_CREDENTIALS, _credentialService.getCredentials(auth.getName()));
         return "home";
     }
 
@@ -121,6 +128,31 @@ public class HomeController {
 
     // TODO implement view in another window?
 
+    @PostMapping(value = "/credentials/createUpdateCredential")
+    public String createUpdateCredential(@ModelAttribute(NEW_NOTE) Note newNote,
+                                         @ModelAttribute(NEW_CRED)Credential newCred,
+                                         Authentication auth,
+                                         Model model){
+        Boolean result = _credentialService.insertCredential(new Credential(
+                        null,
+                        newCred.getUrl(),
+                        newCred.getUsername(),
+                        null,
+                        newCred.getPassword(),
+                        _userService.getUser(auth.getName()).getUserId()));
+
+        model.addAttribute(LIST_CREDENTIALS, _credentialService.getCredentials(auth.getName()));
+        return "redirect:/result?isSuccess=" + result;
+    }
+
+    @GetMapping("/credentials/delete/{credId}")
+    public String deleteCredential(@PathVariable Integer credId,
+                             Authentication auth,
+                             Model model) {
+        Boolean result = _credentialService.deleteCredential(credId);
+        model.addAttribute(LIST_NOTES, _credentialService.getCredentials(auth.getName()));
+        return "redirect:/result?isSuccess=" + result;
+    }
 }
 
 /*

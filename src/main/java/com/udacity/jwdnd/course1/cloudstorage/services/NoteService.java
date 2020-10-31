@@ -36,7 +36,7 @@ public class NoteService {
             return true;
         } catch(Exception e) {
             //TODO Log?
-            System.out.println("Deleted failed");
+            System.out.println("Delete failed");
             return false;
         }
     }
