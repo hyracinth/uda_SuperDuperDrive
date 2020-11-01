@@ -2,6 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
 import com.udacity.jwdnd.course1.cloudstorage.config.SDDConstants;
 import com.udacity.jwdnd.course1.cloudstorage.models.File;
+import com.udacity.jwdnd.course1.cloudstorage.services.ActiveTabService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.http.HttpHeaders;
@@ -21,16 +22,21 @@ import java.io.IOException;
 public class FilesController {
     private final UserService userService;
     private final FileService fileService;
+    private final ActiveTabService activeTabService;
 
-    public FilesController(UserService userService, FileService fileService) {
+    public FilesController(UserService userService,
+                           FileService fileService,
+                           ActiveTabService activeTabService) {
         this.userService = userService;
         this.fileService = fileService;
+        this.activeTabService = activeTabService;
     }
 
     @PostMapping(value = "/files/upload")
     public String uploadFile(@RequestParam("fileUpload") MultipartFile fileIn,
                              Authentication auth,
                              Model model) throws IOException {
+        activeTabService.setActiveTab(SDDConstants.TAB_FILES);
         if(fileIn.isEmpty()) {
             return "redirect:/result?success=" + false + "&errorType=1";
         }
@@ -54,6 +60,7 @@ public class FilesController {
     public String deleteFile(@PathVariable Integer fileId,
                              Authentication auth,
                              Model model) {
+        activeTabService.setActiveTab(SDDConstants.TAB_FILES);
         Boolean result = fileService.deleteFile(fileId);
         model.addAttribute(SDDConstants.LIST_FILES, fileService.getFiles(auth.getName()));
         return "redirect:/result?success=" + result;
@@ -63,6 +70,7 @@ public class FilesController {
     public ResponseEntity download(@PathVariable Integer fileId,
                                    Authentication auth,
                                    Model model){
+        activeTabService.setActiveTab(SDDConstants.TAB_FILES);
         File selectedFile = fileService.getFile(fileId);
 
         return ResponseEntity.ok()
