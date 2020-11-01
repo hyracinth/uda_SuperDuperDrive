@@ -3,17 +3,18 @@ package com.udacity.jwdnd.course1.cloudstorage.Selenium;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class SignupAndLoginTest {
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class NoteCreateEditDeleteTest {
     @LocalServerPort
     private int port;
 
@@ -29,6 +30,9 @@ public class SignupAndLoginTest {
     public void beforeEach() {
         this.webDriver = new ChromeDriver();
         this.webDriverWait = new WebDriverWait(webDriver, 1000);
+
+        this.userSignup();
+        this.userLogin();
     }
 
     @AfterEach
@@ -39,44 +43,35 @@ public class SignupAndLoginTest {
     }
 
     @Test
-    // Test home page loads without error messages
-    public void homeWithoutMessage() {
+    @Order(1)
+    public void insertNote() {
         this.webDriver.get("http://localhost:" + this.port + "/home");
-        Assertions.assertThrows(NoSuchElementException.class, () -> {
-            this.webDriver.findElement(By.id("invalidUserPassMsg"));
-        });
-        Assertions.assertThrows(NoSuchElementException.class, () -> {
-            this.webDriver.findElement(By.id("userLoggedOutMsg"));
-        });
-    }
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("nav-notes-tab")));
+        WebElement notesTab = this.webDriver.findElement(By.id("nav-notes-tab"));
+        notesTab.click();
 
-    @Test
-    // Test redirect to login without being logged in
-    public void homeUnauthorized() {
-        this.webDriver.get("http://localhost:" + this.port + "/home");
-        Assertions.assertEquals("Login", this.webDriver.getTitle());
-    }
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("noteCreateButton")));
+        WebElement noteCreateButton = this.webDriver.findElement(By.id("noteCreateButton"));
+        noteCreateButton.click();
 
-    @Test
-    // Test show invalid login
-    public void invalidLogin() {
-        this.webDriver.get("http://localhost:" + this.port + "/login");
+        WebElement titleField = this.webDriver.findElement(By.id("note-title"));
+        titleField.sendKeys("Note Title");
+        WebElement descriptionField = this.webDriver.findElement(By.id("note-description"));
+        descriptionField.sendKeys("Note Description");
 
-        WebElement usernameField = webDriver.findElement(By.id("inputUsername"));
-        usernameField.sendKeys("someAdmin");
-        WebElement passwordField = webDriver.findElement(By.id("inputPassword"));
-        passwordField.sendKeys("somePassword");
-        WebElement submitButton = webDriver.findElement(By.id("loginSubmitBtn"));
-        submitButton.click();
+        WebElement noteSubmitButton = this.webDriver.findElement(By.id("noteSubmit"));
+        noteSubmitButton.click();
 
         Assertions.assertDoesNotThrow(() -> {
-            this.webDriver.findElement(By.id("invalidUserPassMsg"));
+            this.webDriver.findElement(By.xpath("//td[text()='Note Title']"));
+            this.webDriver.findElement(By.xpath("//td[text()='Note Description']"));
         });
     }
 
-    @Test
-    // Test user sign up and login
-    public void userSignupAndLogin() {
+    // TODO Issue with interacting with submit button??
+
+    // Utility
+    private void userSignup() {
         this.webDriver.get("http://localhost:" + this.port + "/signup");
         Assertions.assertEquals("Sign Up", webDriver.getTitle());
 
@@ -90,15 +85,10 @@ public class SignupAndLoginTest {
         pwField.sendKeys("password");
         WebElement submitButton = this.webDriver.findElement(By.id("signupSubmitButton"));
         submitButton.click();
+    }
 
-        Assertions.assertDoesNotThrow(() -> {
-            this.webDriver.findElement(By.id("signupSuccessMsg"));
-        });
-
-        WebElement toLoginLink = this.webDriver.findElement(By.id("toLoginHref"));
-        toLoginLink.click();
-
-        this.webDriverWait.until(ExpectedConditions.titleContains("Login"));
+    private void userLogin() {
+        this.webDriver.get("http://localhost:" + this.port + "/login");
         Assertions.assertEquals("Login", webDriver.getTitle());
 
         WebElement usernameField = webDriver.findElement(By.id("inputUsername"));
@@ -107,21 +97,5 @@ public class SignupAndLoginTest {
         passwordField.sendKeys("password");
         WebElement loginButton = webDriver.findElement(By.id("loginSubmitBtn"));
         loginButton.click();
-
-        this.webDriverWait.until(ExpectedConditions.titleContains("Home"));
-        Assertions.assertEquals("Home", webDriver.getTitle());
     }
-
-    @Test
-    // Test logout
-    public void userLogout() {
-        this.userSignupAndLogin();
-
-        WebElement logoutButton = webDriver.findElement(By.id("logoutButton"));
-        logoutButton.click();
-
-        this.webDriverWait.until(ExpectedConditions.titleContains("Login"));
-        Assertions.assertEquals("Login", webDriver.getTitle());
-    }
-
 }
