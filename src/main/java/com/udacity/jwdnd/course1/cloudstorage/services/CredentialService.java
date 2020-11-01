@@ -27,7 +27,6 @@ public class CredentialService {
             _credentialMapper.deleteCredential(credId);
             return true;
         } catch(Exception e) {
-            //TODO Log?
             System.out.println("Delete failed");
             return false;
         }

@@ -32,7 +32,6 @@ public class FileService {
             _fileMapper.deleteFile(fileId);
             return true;
         } catch(Exception e) {
-            //TODO Log?
             System.out.println("Delete failed");
             return false;
         }

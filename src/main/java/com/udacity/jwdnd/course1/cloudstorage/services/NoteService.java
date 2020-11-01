@@ -35,7 +35,6 @@ public class NoteService {
             _noteMapper.deleteNote(noteId);
             return true;
         } catch(Exception e) {
-            //TODO Log?
             System.out.println("Delete failed");
             return false;
         }
