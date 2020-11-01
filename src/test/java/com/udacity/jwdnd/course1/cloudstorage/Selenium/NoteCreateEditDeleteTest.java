@@ -36,7 +36,7 @@ public class NoteCreateEditDeleteTest {
 
     @AfterEach
     public void afterEach() {
-        if(this.webDriver != null) {
+        if (this.webDriver != null) {
             this.webDriver.quit();
         }
     }
@@ -62,17 +62,97 @@ public class NoteCreateEditDeleteTest {
         WebElement noteSubmitButton = this.webDriver.findElement(By.id("noteFooterSubmit"));
         noteSubmitButton.click();
 
-
+        this.webDriverWait.until(ExpectedConditions.titleContains("Result"));
         Assertions.assertEquals("Result", webDriver.getTitle());
-/*
-            Assertions.assertDoesNotThrow(() -> {
-            this.webDriver.findElement(By.xpath("//td[text()='Note Title']"));
+
+        Assertions.assertDoesNotThrow(() -> {
+            this.webDriver.findElement(By.id("resultSaveSuccess"));
+        });
+
+        this.webDriver.get("http://localhost:" + this.port + "/home");
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("nav-notes-tab")));
+        WebElement notesTab2 = this.webDriver.findElement(By.id("nav-notes-tab"));
+        notesTab2.click();
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("noteCreateButton")));
+        Assertions.assertDoesNotThrow(() -> {
+            this.webDriver.findElement(By.xpath("//th[text()='Note Title']"));
             this.webDriver.findElement(By.xpath("//td[text()='Note Description']"));
         });
-*/
     }
 
-    // Utility
+    @Test
+    @Order(2)
+    public void editNote() {
+        this.webDriver.get("http://localhost:" + this.port + "/home");
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("nav-notes-tab")));
+        WebElement notesTab = this.webDriver.findElement(By.id("nav-notes-tab"));
+        notesTab.click();
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("editNoteButton")));
+        WebElement editNoteButton = this.webDriver.findElement(By.id("editNoteButton"));
+        editNoteButton.click();
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("note-title")));
+        WebElement titleField = this.webDriver.findElement(By.id("note-title"));
+        titleField.sendKeys(" Updated");
+        WebElement descriptionField = this.webDriver.findElement(By.id("note-description"));
+        descriptionField.sendKeys(" Updated");
+
+        WebElement noteSubmitButton = this.webDriver.findElement(By.id("noteFooterSubmit"));
+        noteSubmitButton.click();
+
+        this.webDriverWait.until(ExpectedConditions.titleContains("Result"));
+        Assertions.assertEquals("Result", webDriver.getTitle());
+
+        Assertions.assertDoesNotThrow(() -> {
+            this.webDriver.findElement(By.id("resultSaveSuccess"));
+        });
+
+        this.webDriver.get("http://localhost:" + this.port + "/home");
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("nav-notes-tab")));
+        WebElement notesTab2 = this.webDriver.findElement(By.id("nav-notes-tab"));
+        notesTab2.click();
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("noteCreateButton")));
+        Assertions.assertDoesNotThrow(() -> {
+            this.webDriver.findElement(By.xpath("//th[text()='Note Title Updated']"));
+            this.webDriver.findElement(By.xpath("//td[text()='Note Description Updated']"));
+        });
+    }
+
+    @Test
+    @Order(3)
+    public void deleteNote() {
+        this.webDriver.get("http://localhost:" + this.port + "/home");
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("nav-notes-tab")));
+        WebElement notesTab = this.webDriver.findElement(By.id("nav-notes-tab"));
+        notesTab.click();
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("deleteNoteButton")));
+        WebElement deleteNoteButton = this.webDriver.findElement(By.id("deleteNoteButton"));
+        deleteNoteButton.click();
+
+        this.webDriverWait.until(ExpectedConditions.titleContains("Result"));
+        Assertions.assertEquals("Result", webDriver.getTitle());
+
+        Assertions.assertDoesNotThrow(() -> {
+            this.webDriver.findElement(By.id("resultSaveSuccess"));
+        });
+
+        this.webDriver.get("http://localhost:" + this.port + "/home");
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("nav-notes-tab")));
+        WebElement notesTab2 = this.webDriver.findElement(By.id("nav-notes-tab"));
+        notesTab2.click();
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("noteCreateButton")));
+        Assertions.assertDoesNotThrow(() -> {
+            this.webDriver.findElement(By.id("emptyNotesMsg"));
+        });
+    }
+
+    // Utility functions
+    // Sign up user
     private void userSignup() {
         this.webDriver.get("http://localhost:" + this.port + "/signup");
         Assertions.assertEquals("Sign Up", webDriver.getTitle());
@@ -89,6 +169,7 @@ public class NoteCreateEditDeleteTest {
         submitButton.click();
     }
 
+    // Logins user
     private void userLogin() {
         this.webDriver.get("http://localhost:" + this.port + "/login");
         Assertions.assertEquals("Login", webDriver.getTitle());
