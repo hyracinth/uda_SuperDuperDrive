@@ -59,12 +59,15 @@ public class SignupAndLoginTest {
     public void invalidLogin() {
         this.webDriver.get("http://localhost:" + this.port + "/login");
         Assertions.assertEquals("Login", webDriver.getTitle());
+
         this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("inputUsername"))));
         this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("inputUsername")));
         this.jsWebDriver.executeScript("arguments[0].value='" + "someAdmin" + "';", webDriver.findElement(By.id("inputUsername")));
+
         this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("inputPassword"))));
         this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("inputPassword")));
         this.jsWebDriver.executeScript("arguments[0].value='" + "somePassword" + "';", webDriver.findElement(By.id("inputPassword")));
+
         this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("loginSubmitBtn"))));
         this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("loginSubmitBtn")));
         Assertions.assertDoesNotThrow(() -> {

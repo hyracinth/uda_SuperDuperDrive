@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.Selenium;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -19,6 +20,7 @@ public class NoteCreateEditDeleteTest {
 
     private WebDriver webDriver;
     private WebDriverWait webDriverWait;
+    private JavascriptExecutor jsWebDriver;
 
     @BeforeAll
     public static void beforeAll() {
@@ -28,7 +30,8 @@ public class NoteCreateEditDeleteTest {
     @BeforeEach
     public void beforeEach() {
         this.webDriver = new ChromeDriver();
-        this.webDriverWait = new WebDriverWait(webDriver, 1000);
+        this.webDriverWait = new WebDriverWait(webDriver, 2);
+        this.jsWebDriver = (JavascriptExecutor) this.webDriver;
 
         this.userSignup();
         this.userLogin();
@@ -45,22 +48,22 @@ public class NoteCreateEditDeleteTest {
     @Order(1)
     public void insertNote() {
         this.webDriver.get("http://localhost:" + this.port + "/home");
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("nav-notes-tab")));
-        WebElement notesTab = this.webDriver.findElement(By.id("nav-notes-tab"));
-        notesTab.click();
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("nav-notes-tab"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("nav-notes-tab")));
 
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("noteCreateButton")));
-        WebElement noteCreateButton = this.webDriver.findElement(By.id("noteCreateButton"));
-        noteCreateButton.click();
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("noteCreateButton"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("noteCreateButton")));
 
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("note-title")));
-        WebElement titleField = this.webDriver.findElement(By.id("note-title"));
-        titleField.sendKeys("Note Title");
-        WebElement descriptionField = this.webDriver.findElement(By.id("note-description"));
-        descriptionField.sendKeys("Note Description");
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("note-title"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("note-title")));
+        this.jsWebDriver.executeScript("arguments[0].value='" + "Note Title" + "';", webDriver.findElement(By.id("note-title")));
 
-        WebElement noteSubmitButton = this.webDriver.findElement(By.id("noteFooterSubmit"));
-        noteSubmitButton.click();
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("note-description"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("note-description")));
+        this.jsWebDriver.executeScript("arguments[0].value='" + "Note Description" + "';", webDriver.findElement(By.id("note-description")));
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("noteFooterSubmit"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("noteFooterSubmit")));
 
         this.webDriverWait.until(ExpectedConditions.titleContains("Result"));
         Assertions.assertEquals("Result", webDriver.getTitle());
@@ -70,9 +73,8 @@ public class NoteCreateEditDeleteTest {
         });
 
         this.webDriver.get("http://localhost:" + this.port + "/home");
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("nav-notes-tab")));
-        WebElement notesTab2 = this.webDriver.findElement(By.id("nav-notes-tab"));
-        notesTab2.click();
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("nav-notes-tab"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("nav-notes-tab")));
 
         this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("noteCreateButton")));
         Assertions.assertDoesNotThrow(() -> {
@@ -85,22 +87,22 @@ public class NoteCreateEditDeleteTest {
     @Order(2)
     public void editNote() {
         this.webDriver.get("http://localhost:" + this.port + "/home");
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("nav-notes-tab")));
-        WebElement notesTab = this.webDriver.findElement(By.id("nav-notes-tab"));
-        notesTab.click();
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("nav-notes-tab"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("nav-notes-tab")));
 
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("editNoteButton")));
-        WebElement editNoteButton = this.webDriver.findElement(By.id("editNoteButton"));
-        editNoteButton.click();
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("editNoteButton"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("editNoteButton")));
 
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("note-title")));
-        WebElement titleField = this.webDriver.findElement(By.id("note-title"));
-        titleField.sendKeys(" Updated");
-        WebElement descriptionField = this.webDriver.findElement(By.id("note-description"));
-        descriptionField.sendKeys(" Updated");
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("note-title"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("note-title")));
+        this.jsWebDriver.executeScript("arguments[0].value='" + "Note Title Updated" + "';", webDriver.findElement(By.id("note-title")));
 
-        WebElement noteSubmitButton = this.webDriver.findElement(By.id("noteFooterSubmit"));
-        noteSubmitButton.click();
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("note-description"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("note-description")));
+        this.jsWebDriver.executeScript("arguments[0].value='" + "Note Description Updated" + "';", webDriver.findElement(By.id("note-description")));
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("noteFooterSubmit"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("noteFooterSubmit")));
 
         this.webDriverWait.until(ExpectedConditions.titleContains("Result"));
         Assertions.assertEquals("Result", webDriver.getTitle());
@@ -110,9 +112,8 @@ public class NoteCreateEditDeleteTest {
         });
 
         this.webDriver.get("http://localhost:" + this.port + "/home");
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("nav-notes-tab")));
-        WebElement notesTab2 = this.webDriver.findElement(By.id("nav-notes-tab"));
-        notesTab2.click();
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("nav-notes-tab"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("nav-notes-tab")));
 
         this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("noteCreateButton")));
         Assertions.assertDoesNotThrow(() -> {
@@ -125,13 +126,11 @@ public class NoteCreateEditDeleteTest {
     @Order(3)
     public void deleteNote() {
         this.webDriver.get("http://localhost:" + this.port + "/home");
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("nav-notes-tab")));
-        WebElement notesTab = this.webDriver.findElement(By.id("nav-notes-tab"));
-        notesTab.click();
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("nav-notes-tab"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("nav-notes-tab")));
 
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("deleteNoteButton")));
-        WebElement deleteNoteButton = this.webDriver.findElement(By.id("deleteNoteButton"));
-        deleteNoteButton.click();
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("deleteNoteButton"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("deleteNoteButton")));
 
         this.webDriverWait.until(ExpectedConditions.titleContains("Result"));
         Assertions.assertEquals("Result", webDriver.getTitle());
@@ -141,9 +140,8 @@ public class NoteCreateEditDeleteTest {
         });
 
         this.webDriver.get("http://localhost:" + this.port + "/home");
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("nav-notes-tab")));
-        WebElement notesTab2 = this.webDriver.findElement(By.id("nav-notes-tab"));
-        notesTab2.click();
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("nav-notes-tab"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("nav-notes-tab")));
 
         this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("noteCreateButton")));
         Assertions.assertDoesNotThrow(() -> {

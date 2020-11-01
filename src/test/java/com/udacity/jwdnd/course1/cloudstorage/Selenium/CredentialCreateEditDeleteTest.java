@@ -2,9 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage.Selenium;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -19,6 +17,7 @@ public class CredentialCreateEditDeleteTest {
 
     private WebDriver webDriver;
     private WebDriverWait webDriverWait;
+    private JavascriptExecutor jsWebDriver;
 
     @BeforeAll
     public static void beforeAll() {
@@ -29,6 +28,7 @@ public class CredentialCreateEditDeleteTest {
     public void beforeEach() {
         this.webDriver = new ChromeDriver();
         this.webDriverWait = new WebDriverWait(webDriver, 2);
+        this.jsWebDriver = (JavascriptExecutor) this.webDriver;
 
         this.userSignup();
         this.userLogin();
@@ -45,24 +45,26 @@ public class CredentialCreateEditDeleteTest {
     @Order(1)
     public void insertCredential() {
         this.webDriver.get("http://localhost:" + this.port + "/home");
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("nav-credentials-tab")));
-        WebElement credentialTab = this.webDriver.findElement(By.id("nav-credentials-tab"));
-        credentialTab.click();
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("nav-credentials-tab"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("nav-credentials-tab")));
 
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("credentialCreateButton")));
-        WebElement credentialCreateButton = this.webDriver.findElement(By.id("credentialCreateButton"));
-        credentialCreateButton.click();
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("credentialCreateButton"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("credentialCreateButton")));
 
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("credential-url")));
-        WebElement urlField = this.webDriver.findElement(By.id("credential-url"));
-        urlField.sendKeys("https://google.com");
-        WebElement usernameField = this.webDriver.findElement(By.id("credential-username"));
-        usernameField.sendKeys("SomeUsername");
-        WebElement passwordField = this.webDriver.findElement(By.id("credential-password"));
-        passwordField.sendKeys("SomePassword");
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("credential-url"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("credential-url")));
+        this.jsWebDriver.executeScript("arguments[0].value='" + "https://google.com" + "';", webDriver.findElement(By.id("credential-url")));
 
-        WebElement credentialFooterSubmit = this.webDriver.findElement(By.id("credentialFooterSubmit"));
-        credentialFooterSubmit.click();
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("credential-username"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("credential-username")));
+        this.jsWebDriver.executeScript("arguments[0].value='" + "SomeUsername" + "';", webDriver.findElement(By.id("credential-username")));
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("credential-password"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("credential-password")));
+        this.jsWebDriver.executeScript("arguments[0].value='" + "SomePassword" + "';", webDriver.findElement(By.id("credential-password")));
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("credentialFooterSubmit"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("credentialFooterSubmit")));
 
         this.webDriverWait.until(ExpectedConditions.titleContains("Result"));
         Assertions.assertEquals("Result", webDriver.getTitle());
@@ -72,20 +74,94 @@ public class CredentialCreateEditDeleteTest {
         });
 
         this.webDriver.get("http://localhost:" + this.port + "/home");
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("nav-credential-tab")));
-        WebElement credentialTab2 = this.webDriver.findElement(By.id("nav-credential-tab"));
-        credentialTab2.click();
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("nav-credentials-tab"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("nav-credentials-tab")));
 
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("noteCreateButton")));
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("credentialCreateButton")));
         Assertions.assertDoesNotThrow(() -> {
             this.webDriver.findElement(By.xpath("//th[text()='https://google.com']"));
             this.webDriver.findElement(By.xpath("//td[text()='SomeUsername']"));
+        });
+
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
             this.webDriver.findElement(By.xpath("//td[text()='SomePassword']"));
         });
     }
 
+    @Test
+    @Order(2)
+    public void editCredential() {
+        this.webDriver.get("http://localhost:" + this.port + "/home");
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("nav-credentials-tab"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("nav-credentials-tab")));
 
-    // TODO Extract into utils (duplicate code)
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("editCredentialButton"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("editCredentialButton")));
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("credential-url"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("credential-url")));
+        this.jsWebDriver.executeScript("arguments[0].value='" + "https://gmail.com" + "';", webDriver.findElement(By.id("credential-url")));
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("credential-username"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("credential-username")));
+        this.jsWebDriver.executeScript("arguments[0].value='" + "SomeUsernameUpdated" + "';", webDriver.findElement(By.id("credential-username")));
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("credential-password"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("credential-password")));
+        this.jsWebDriver.executeScript("arguments[0].value='" + "SomePasswordUpdated" + "';", webDriver.findElement(By.id("credential-password")));
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("credentialFooterSubmit"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("credentialFooterSubmit")));
+
+        this.webDriverWait.until(ExpectedConditions.titleContains("Result"));
+        Assertions.assertEquals("Result", webDriver.getTitle());
+
+        Assertions.assertDoesNotThrow(() -> {
+            this.webDriver.findElement(By.id("resultSaveSuccess"));
+        });
+
+        this.webDriver.get("http://localhost:" + this.port + "/home");
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("nav-credentials-tab"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("nav-credentials-tab")));
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("credentialCreateButton")));
+        Assertions.assertDoesNotThrow(() -> {
+            this.webDriver.findElement(By.xpath("//th[text()='https://gmail.com']"));
+            this.webDriver.findElement(By.xpath("//td[text()='SomeUsernameUpdated']"));
+        });
+
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
+            this.webDriver.findElement(By.xpath("//td[text()='SomePasswordUpdated']"));
+        });
+    }
+
+    @Test
+    @Order(3)
+    public void deleteNote() {
+        this.webDriver.get("http://localhost:" + this.port + "/home");
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("nav-credentials-tab"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("nav-credentials-tab")));
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("deleteCredentialButton"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("deleteCredentialButton")));
+
+        this.webDriverWait.until(ExpectedConditions.titleContains("Result"));
+        Assertions.assertEquals("Result", webDriver.getTitle());
+
+        Assertions.assertDoesNotThrow(() -> {
+            this.webDriver.findElement(By.id("resultSaveSuccess"));
+        });
+
+        this.webDriver.get("http://localhost:" + this.port + "/home");
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("nav-credentials-tab"))));
+        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("nav-credentials-tab")));
+
+        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("credentialCreateButton")));
+        Assertions.assertDoesNotThrow(() -> {
+            this.webDriver.findElement(By.id("emptyCredentialsMsg"));
+        });
+    }
+
     // Utility functions
     // Sign up user
     private void userSignup() {
