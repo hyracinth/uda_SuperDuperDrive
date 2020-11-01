@@ -15,15 +15,18 @@ public class HomeController {
     private final FileService fileService;
     private final CredentialService credentialService;
     private final EncryptionService encryptionService;
+    private final ActiveTabService activeTabService;
 
     public HomeController(NoteService noteService,
                           FileService fileService,
                           CredentialService credentialService,
-                          EncryptionService encryptionService) {
+                          EncryptionService encryptionService,
+                          ActiveTabService activeTabService) {
         this.noteService = noteService;
         this.fileService = fileService;
         this.credentialService = credentialService;
         this.encryptionService = encryptionService;
+        this.activeTabService = activeTabService;
     }
 
     @GetMapping("/home")
@@ -34,6 +37,8 @@ public class HomeController {
         model.addAttribute(SDDConstants.ENCRYPTION_SERVICE, encryptionService);
         model.addAttribute(SDDConstants.NEW_NOTE, new Note());
         model.addAttribute(SDDConstants.NEW_CREDENTIAL, new Credential());
+        model.addAttribute(SDDConstants.ACTIVE_TAB, activeTabService.getActiveTab());
+        System.out.println(activeTabService.getActiveTab());
         return "home";
     }
 

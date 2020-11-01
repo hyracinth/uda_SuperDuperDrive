@@ -18,7 +18,7 @@
             <div id="contentDiv" style="clear: right;">
                 <nav style="clear: right;">
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-files-tab" data-toggle="tab" href="#nav-files" role="tab" aria-controls="nav-files" aria-selected="true">Files</a>
+                        <a class="nav-item nav-link" id="nav-files-tab" data-toggle="tab" href="#nav-files" role="tab" aria-controls="nav-files" aria-selected="true">Files</a>
                         <a class="nav-item nav-link" id="nav-notes-tab" data-toggle="tab" href="#nav-notes" role="tab" aria-controls="nav-notes" aria-selected="false">Notes</a>
                         <a class="nav-item nav-link" id="nav-credentials-tab" data-toggle="tab" href="#nav-credentials" role="tab" aria-controls="nav-credentials" aria-selected="false">Credentials</a>
                     </div>
@@ -138,8 +138,23 @@
         <script th:src="@{/js/popper.min.js}"></script>
         <script th:src="@{/js/bootstrap.min.js}"></script>
 
-        <!--For opening the note modal-->
         <script type="text/javascript">
+            const activeTabModel = "${activeTab}";
+            switch(true) {
+                case activeTabModel === 'files':
+                    $('#nav-files-tab').tab('show');
+                    break;
+                case activeTabModel === 'notes':
+                    $('#nav-notes-tab').tab('show');
+                    break;
+                case activeTabModel === 'credentials':
+                    $('#nav-credentials-tab').tab('show');
+                    break;
+                default:
+                    $('#nav-files-tab').tab('show');
+                    break;
+            }
+
             // For opening the note modal
             function showNoteModal(noteId, noteTitle, noteDescription) {
                 $('#note-id').val(noteId ? noteId : '');
