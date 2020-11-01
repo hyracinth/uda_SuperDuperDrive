@@ -48,8 +48,9 @@ public class HomeController {
         model.addAttribute(LIST_NOTES, noteService.getNotes(auth.getName()));
         model.addAttribute(LIST_FILES, fileService.getFiles(auth.getName()));
         model.addAttribute(LIST_CREDENTIALS, credentialService.getCredentials(auth.getName()));
-        model.addAttribute("_encryptionService", encryptionService);
+        model.addAttribute("encryptionService", encryptionService);
         model.addAttribute(NEW_NOTE, new Note());
+        model.addAttribute(NEW_CREDENTIAL, new Credential());
         return "home";
     }
 
