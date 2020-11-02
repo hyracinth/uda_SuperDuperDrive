@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+/**
+ * This controller handles logic regarding notes
+ */
 @Controller
 public class NotesController {
     private NoteService noteService;
@@ -27,6 +30,15 @@ public class NotesController {
         this.activeTabService = activeTabService;
     }
 
+    /**
+     * This method handles the logic for creating and updating Notes
+     * It takes a note object from HTML side and sends it to the service to be handled
+     * The method also sets the active tab and then sends an updated list of notes
+     * @param newNote note from the user to be added / updated
+     * @param auth Authentication object to get user details
+     * @param model Model object for data binding
+     * @return redirects to results page to show user status
+     */
     @PostMapping(value = "/notes/createUpdate", params = "createUpdateNote")
     public String createUpdateNote(@ModelAttribute(SDDConstants.NEW_NOTE) Note newNote,
                                    Authentication auth,
@@ -41,6 +53,13 @@ public class NotesController {
         return "redirect:/result?success=" + result;
     }
 
+    /**
+     * This method takes an id from the HTML and pass it to the service to be deleted
+     * @param noteId id of note to be deleted
+     * @param auth Authentication object to get user details
+     * @param model Model object for data binding
+     * @return redirects to results page to show user status
+     */
     @GetMapping("/notes/delete/{noteId}")
     public String deleteNote(@PathVariable Integer noteId,
                              Authentication auth,

@@ -1,5 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage.models;
 
+import lombok.Getter;
+
+@Getter
 public class File {
     private Integer fileId;
     private String filename;
@@ -15,29 +18,5 @@ public class File {
         this.fileSize = fileSize;
         this.userId = userId;
         this.fileData = fileData;
-    }
-
-    public Integer getFileId() {
-        return fileId;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public String getFileSize() {
-        return fileSize;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public byte[] getFileData() {
-        return fileData;
     }
 }

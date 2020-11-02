@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This service is a singleton to maintain the state of active state
+ */
 @Service
 @Scope("singleton")
 public class ActiveTabService {

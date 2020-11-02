@@ -38,7 +38,6 @@ public class SignupAndLoginTest {
     }
 
     @Test
-    // Test home page loads without error messages
     public void homeWithoutMessage() {
         this.webDriver.get("http://localhost:" + this.port + "/home");
         Assertions.assertThrows(NoSuchElementException.class, () -> {
@@ -119,15 +118,12 @@ public class SignupAndLoginTest {
         this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("signupSubmitButton"))));
         this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("signupSubmitButton")));
 
+        this.webDriverWait.until(ExpectedConditions.titleContains("Login"));
+        Assertions.assertEquals("Login", webDriver.getTitle());
+
         Assertions.assertDoesNotThrow(() -> {
             this.webDriver.findElement(By.id("signupSuccessMsg"));
         });
-
-        this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("toLoginHref"))));
-        this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("toLoginHref")));
-
-        this.webDriverWait.until(ExpectedConditions.titleContains("Login"));
-        Assertions.assertEquals("Login", webDriver.getTitle());
 
         this.webDriverWait.until(ExpectedConditions.elementToBeClickable(webDriver.findElement(By.id("inputUsername"))));
         this.jsWebDriver.executeScript("arguments[0].click();", webDriver.findElement(By.id("inputUsername")));

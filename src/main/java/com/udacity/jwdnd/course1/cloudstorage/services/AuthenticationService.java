@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
+/**
+ * This service overrides the default AuthenticationProvider
+ */
 @Service
 public class AuthenticationService implements AuthenticationProvider {
     private UserMapper userMapper;
@@ -20,6 +23,12 @@ public class AuthenticationService implements AuthenticationProvider {
         this.hashService = hashService;
     }
 
+    /**
+     * This method handles creating a token for a authorized user
+     * @param authentication Authentication object from springframework.security.core
+     * @return a token for authorized user
+     * @throws AuthenticationException if not authorized
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
@@ -33,7 +42,6 @@ public class AuthenticationService implements AuthenticationProvider {
                 return new UsernamePasswordAuthenticationToken(username, password, new ArrayList<>());
             }
         }
-
         return null;
     }
 

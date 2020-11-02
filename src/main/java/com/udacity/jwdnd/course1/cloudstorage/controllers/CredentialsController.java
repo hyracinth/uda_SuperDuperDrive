@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+/**
+ * This controller handles logic regarding credentials
+ */
 @Controller
 public class CredentialsController {
     private final CredentialService credentialService;
@@ -27,6 +30,15 @@ public class CredentialsController {
         this.activeTabService = activeTabService;
     }
 
+    /**
+     * This method handles the logic for creating and updating credentials
+     * It takes a note object from HTML side and sends it to the service to be handled
+     * The method also sets the active tab and then sends an updated list of credentials
+     * @param newCred credential from user to be added / updated
+     * @param auth Authentication object to get user details
+     * @param model Model object for data binding
+     * @return redirects to results page to show user status
+     */
     @PostMapping(value = "/credentials/createUpdate")
     public String createUpdateCredential(@ModelAttribute(SDDConstants.NEW_CREDENTIAL) Credential newCred,
                                          Authentication auth,
@@ -44,6 +56,13 @@ public class CredentialsController {
         return "redirect:/result?success=" + result;
     }
 
+    /**
+     This method takes an id from the HTML and pass it to the service to be deleted
+     * @param credId id of note to be deleted
+     * @param auth Authentication object to get user details
+     * @param model Model object for data binding
+     * @return redirects to results page to show user status
+     */
     @GetMapping("/credentials/delete/{credId}")
     public String deleteCredential(@PathVariable Integer credId,
                                    Authentication auth,
