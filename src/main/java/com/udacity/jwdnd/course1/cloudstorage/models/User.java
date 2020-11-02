@@ -1,5 +1,9 @@
 package com.udacity.jwdnd.course1.cloudstorage.models;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
 public class User {
     private Integer userId;
     private String username;
@@ -15,29 +19,5 @@ public class User {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public Integer getUserId() {
-        return userId;
     }
 }

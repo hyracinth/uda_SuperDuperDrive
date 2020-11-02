@@ -38,7 +38,6 @@ public class HomeController {
         model.addAttribute(SDDConstants.NEW_NOTE, new Note());
         model.addAttribute(SDDConstants.NEW_CREDENTIAL, new Credential());
         model.addAttribute(SDDConstants.ACTIVE_TAB, activeTabService.getActiveTab());
-        System.out.println(activeTabService.getActiveTab());
         return "home";
     }
 
@@ -51,19 +50,3 @@ public class HomeController {
         return "result";
     }
 }
-
-
-// TODO implement view in another window?
-// TODO implement remember active tabs
-
-/*
-Questions:
-th:action="@{/home}" vs th:action="@{'/home'}"
-action vs href
-*/
-
-/*
-Notes:
-Need to add an empty model for getMapping for form
-    otherwise will complain regarding missing properties
- */

@@ -38,7 +38,6 @@ public class SignupAndLoginTest {
     }
 
     @Test
-    // Test home page loads without error messages
     public void homeWithoutMessage() {
         this.webDriver.get("http://localhost:" + this.port + "/home");
         Assertions.assertThrows(NoSuchElementException.class, () -> {
