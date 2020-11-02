@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+/**
+ * This controller handles logic regarding signup
+ */
 @Controller
 public class SignupController {
 
@@ -22,16 +25,23 @@ public class SignupController {
         return "signup";
     }
 
+    /**
+     * This method handles user sign up.
+     * If the username exists, it will display an error
+     * Otherwise, it will try to add the user.
+     * On error, it will display an error.
+     * On success, it will redirect to the login page and display a success message
+     * @param user user to be added
+     * @param model Model object for data binding
+     */
     @PostMapping("/signup")
     public String postSignupUser(@ModelAttribute User user, Model model) {
         String signupFailMsg = null;
 
-        // Check if username available
         if(!_userService.isUserAvailable(user.getUsername())) {
             signupFailMsg = "Username not available. Please choose another";
         }
 
-        // Try to add user
         if(signupFailMsg == null) {
             int rowsAdded =_userService.createUser(user);
             if (rowsAdded < 0) {

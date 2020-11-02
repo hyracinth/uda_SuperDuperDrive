@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * This service handles logic regarding Note object
+ */
 @Service
 public class NoteService {
     private NoteMapper _noteMapper;
@@ -14,10 +17,21 @@ public class NoteService {
         this._noteMapper = _noteMapper;
     }
 
+    /**
+     * This method returns a list of notes of the provided username
+     * @param username username to search for notes
+     * @return a list of notes of username
+     */
     public List<Note> getNotes(String username) {
         return _noteMapper.getNotes(username);
     }
 
+    /**
+     * The method handles creating and updating notes
+     * If the note exist, it will update, else it will insert
+     * @param note note to be updated or inserted
+     * @return returns true if inserted / updated
+     */
     public Boolean createUpdateNote(Note note) {
         int result;
         if (note.getNoteId() != null) {
@@ -26,10 +40,14 @@ public class NoteService {
         else {
             result = _noteMapper.insertNote(note);
         }
-        System.out.println(result);
         return result > 0;
     }
 
+    /**
+     * This method deletes a note given an noteId
+     * @param noteId note to be deleted
+     * @return returns true if delete successful
+     */
     public Boolean deleteNote(Integer noteId) {
         try {
             _noteMapper.deleteNote(noteId);

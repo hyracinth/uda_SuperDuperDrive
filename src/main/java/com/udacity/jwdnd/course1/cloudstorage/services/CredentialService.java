@@ -8,6 +8,9 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
 
+/**
+ * This service handles logic regarding Credential object
+ */
 @Service
 public class CredentialService {
     private CredentialMapper _credentialMapper;
@@ -18,20 +21,21 @@ public class CredentialService {
         this._encryptionService = _encryptionService;
     }
 
+    /**
+     * This method returns a list of Credentials given a username
+     * @param username username to search for credentials
+     * @return a list of notes of credentials
+     */
     public List<Credential> getCredentials (String username) {
         return this._credentialMapper.getCredentials(username);
     }
 
-    public Boolean deleteCredential(Integer credId) {
-        try {
-            _credentialMapper.deleteCredential(credId);
-            return true;
-        } catch(Exception e) {
-            System.out.println("Delete failed");
-            return false;
-        }
-    }
-
+    /**
+     * The method handles creating and updating credentials
+     * If the credentials exist, it will update, else it will insert
+     * @param credIn credential to be updated or inserted
+     * @return returns true if inserted / updated
+     */
     public Boolean createUpdateCredential(Credential credIn) {
         Integer result = 0;
         SecureRandom random = new SecureRandom();
@@ -51,5 +55,20 @@ public class CredentialService {
         }
 
         return result > 0;
+    }
+
+    /**
+     * This method deletes a credential given an noteId
+     * @param credId credential to be deleted
+     * @return returns true if delete successful
+     */
+    public Boolean deleteCredential(Integer credId) {
+        try {
+            _credentialMapper.deleteCredential(credId);
+            return true;
+        } catch(Exception e) {
+            System.out.println("Delete failed");
+            return false;
+        }
     }
 }

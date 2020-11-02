@@ -11,10 +11,19 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 
+/**
+ * This service handles hashing for encryption
+ */
 @Component
 public class HashService {
     private Logger logger = LoggerFactory.getLogger(HashService.class);
 
+    /**
+     * This method hashes a value given a salt
+     * @param data value to be hashed
+     * @param salt salt to be used for hashing
+     * @return hashed value
+     */
     public String getHashedValue(String data, String salt) {
         byte[] hashedValue = null;
 
@@ -25,7 +34,6 @@ public class HashService {
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             logger.error(e.getMessage());
         }
-
         return Base64.getEncoder().encodeToString(hashedValue);
     }
 }

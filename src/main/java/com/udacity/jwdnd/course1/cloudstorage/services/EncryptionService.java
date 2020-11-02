@@ -11,10 +11,19 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
+/**
+ * This service handles encryption using AES
+ */
 @Service
 public class EncryptionService {
     private Logger logger = LoggerFactory.getLogger(EncryptionService.class);
 
+    /**
+     * This method encrypts a value given a key
+     * @param data value to be encrypted
+     * @param key key for encrypting
+     * @return encrypted value
+     */
     public String encryptValue(String data, String key) {
         byte[] encryptedValue = null;
 
@@ -27,10 +36,15 @@ public class EncryptionService {
                 | UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException e) {
             logger.error(e.getMessage());
         }
-
         return Base64.getEncoder().encodeToString(encryptedValue);
     }
 
+    /**
+     * This method decrypt value given a key
+     * @param data value to be decrypted
+     * @param key key for decrypting
+     * @return decrypted value
+     */
     public String decryptValue(String data, String key) {
         byte[] decryptedValue = null;
 
@@ -43,7 +57,6 @@ public class EncryptionService {
                 | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
             logger.error(e.getMessage());
         }
-
         return new String(decryptedValue);
     }
 }

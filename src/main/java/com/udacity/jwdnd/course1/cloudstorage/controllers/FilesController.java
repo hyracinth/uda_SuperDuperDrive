@@ -18,6 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+/**
+ * This controller handles logic regarding files
+ */
 @Controller
 public class FilesController {
     private final UserService userService;
@@ -32,6 +35,15 @@ public class FilesController {
         this.activeTabService = activeTabService;
     }
 
+    /**
+     * This method handles the logic for uploading a file
+     * It takes a MultipartFile object from HTML side and sends it to the service to be handled
+     * The method also sets the active tab and then sends an updated list of files
+     * @param fileIn file from user to be uploaded
+     * @param auth Authentication object to get user details
+     * @param model Model object for data binding
+     * @return redirects to results page to show user status
+     */
     @PostMapping(value = "/files/upload")
     public String uploadFile(@RequestParam("fileUpload") MultipartFile fileIn,
                              Authentication auth,
@@ -56,6 +68,13 @@ public class FilesController {
         return "redirect:/result?success=" + result;
     }
 
+    /**
+     This method takes an id from the HTML and pass it to the service to be deleted
+     * @param fileId id of note to be deleted
+     * @param auth Authentication object to get user details
+     * @param model Model object for data binding
+     * @return redirects to results page to show user status
+     */
     @GetMapping("/files/delete/{fileId}")
     public String deleteFile(@PathVariable Integer fileId,
                              Authentication auth,
@@ -66,6 +85,13 @@ public class FilesController {
         return "redirect:/result?success=" + result;
     }
 
+    /**
+     * This method downloads the selected file
+     * @param fileId file to be downloaded
+     * @param auth Authentication object to get user details
+     * @param model Model object for data binding
+     * @return ResponseEntity to be handled by browser
+     */
     @GetMapping("/files/download/{fileId}")
     public ResponseEntity download(@PathVariable Integer fileId,
                                    Authentication auth,
