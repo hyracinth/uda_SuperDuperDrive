@@ -1,10 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
 import com.udacity.jwdnd.course1.cloudstorage.models.User;
-import com.udacity.jwdnd.course1.cloudstorage.services.ActiveTabService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 @Controller
 public class SignupController {
-    private UserService userService;
+    private final UserService userService;
 
     public SignupController(UserService userService) {
         this.userService = userService;
@@ -33,28 +30,28 @@ public class SignupController {
      * Otherwise, it will try to add the user.
      * On error, it will display an error.
      * On success, it will redirect to the login page and display a success message
-     * @param user user to be added
+     *
+     * @param user  user to be added
      * @param model Model object for data binding
      */
     @PostMapping("/signup")
     public String postSignupUser(@ModelAttribute User user, Model model) {
         String signupFailMsg = null;
 
-        if(!userService.isUserAvailable(user.getUsername())) {
+        if (!userService.isUserAvailable(user.getUsername())) {
             signupFailMsg = "Username not available. Please choose another";
         }
 
-        if(signupFailMsg == null) {
+        if (signupFailMsg == null) {
             if (!userService.createUser(user)) {
                 signupFailMsg = "There was an error during sign up, please try again.";
             }
         }
 
-        if(signupFailMsg == null) {
+        if (signupFailMsg == null) {
             model.addAttribute("signupSuccess", true);
             return "login";
-        }
-        else {
+        } else {
             model.addAttribute("signupFailMsg", signupFailMsg);
         }
 

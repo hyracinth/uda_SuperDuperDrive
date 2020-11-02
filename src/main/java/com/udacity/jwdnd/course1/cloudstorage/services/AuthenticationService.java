@@ -17,9 +17,9 @@ import java.util.ArrayList;
  */
 @Service
 public class AuthenticationService implements AuthenticationProvider {
-    private Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
-    private UserMapper userMapper;
-    private HashService hashService;
+    private final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
+    private final UserMapper userMapper;
+    private final HashService hashService;
 
     public AuthenticationService(UserMapper userMapper, HashService hashService) {
         this.userMapper = userMapper;
@@ -28,6 +28,7 @@ public class AuthenticationService implements AuthenticationProvider {
 
     /**
      * This method handles creating a token for a authorized user
+     *
      * @param authentication Authentication object from springframework.security.core
      * @return a token for authorized user
      * @throws AuthenticationException if not authorized
@@ -46,8 +47,7 @@ public class AuthenticationService implements AuthenticationProvider {
                     return new UsernamePasswordAuthenticationToken(username, password, new ArrayList<>());
                 }
             }
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
         return null;

@@ -14,9 +14,9 @@ import java.util.List;
 @Service
 @Scope("singleton")
 public class ActiveTabService {
-    private Logger logger = LoggerFactory.getLogger(ActiveTabService.class);
+    private final Logger logger = LoggerFactory.getLogger(ActiveTabService.class);
     private String activeTab;
-    private List<String> listTabs;
+    private final List<String> listTabs;
 
     public ActiveTabService() {
         this.activeTab = "files";
@@ -31,10 +31,9 @@ public class ActiveTabService {
     }
 
     public void setActiveTab(String tabIn) {
-        if(listTabs.contains(tabIn)){
+        if (listTabs.contains(tabIn)) {
             this.activeTab = tabIn;
-        }
-        else {
+        } else {
             this.activeTab = listTabs.get(0);
         }
         logger.info("Active tab updated to: " + this.activeTab);

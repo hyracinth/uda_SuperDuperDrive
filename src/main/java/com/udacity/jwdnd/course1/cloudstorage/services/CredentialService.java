@@ -15,9 +15,9 @@ import java.util.List;
  */
 @Service
 public class CredentialService {
-    private Logger logger = LoggerFactory.getLogger(CredentialService.class);
-    private CredentialMapper _credentialMapper;
-    private EncryptionService _encryptionService;
+    private final Logger logger = LoggerFactory.getLogger(CredentialService.class);
+    private final CredentialMapper _credentialMapper;
+    private final EncryptionService _encryptionService;
 
     public CredentialService(CredentialMapper _credentialMapper, EncryptionService _encryptionService) {
         this._credentialMapper = _credentialMapper;
@@ -26,16 +26,18 @@ public class CredentialService {
 
     /**
      * This method returns a list of Credentials given a username
+     *
      * @param username username to search for credentials
      * @return a list of notes of credentials
      */
-    public List<Credential> getCredentials (String username) {
+    public List<Credential> getCredentials(String username) {
         return this._credentialMapper.getCredentials(username);
     }
 
     /**
      * The method handles creating and updating credentials
      * If the credentials exist, it will update, else it will insert
+     *
      * @param credIn credential to be updated or inserted
      * @return returns true if inserted / updated
      */
@@ -57,8 +59,7 @@ public class CredentialService {
                 result = this._credentialMapper.insertCredential(credIn);
             }
             return result > 0;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
         return false;
@@ -66,6 +67,7 @@ public class CredentialService {
 
     /**
      * This method deletes a credential given an noteId
+     *
      * @param credId credential to be deleted
      * @return returns true if delete successful
      */
@@ -73,7 +75,7 @@ public class CredentialService {
         try {
             _credentialMapper.deleteCredential(credId);
             return true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
         return false;

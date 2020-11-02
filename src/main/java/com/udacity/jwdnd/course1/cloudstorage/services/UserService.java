@@ -14,9 +14,9 @@ import java.util.Base64;
  */
 @Service
 public class UserService {
-    private Logger logger = LoggerFactory.getLogger(UserService.class);
-    private HashService hashService;
-    private UserMapper userMapper;
+    private final Logger logger = LoggerFactory.getLogger(UserService.class);
+    private final HashService hashService;
+    private final UserMapper userMapper;
 
     public UserService(HashService hashService, UserMapper userMapper) {
         this.hashService = hashService;
@@ -25,6 +25,7 @@ public class UserService {
 
     /**
      * This method returns a user from database given username
+     *
      * @param username username to bring back from db
      * @return user object
      */
@@ -34,14 +35,14 @@ public class UserService {
 
     /**
      * This method checks if username is available in database
+     *
      * @param username value to be checked in db
      * @return true if available; false if not available
      */
     public boolean isUserAvailable(String username) {
         try {
             return userMapper.getUser(username) == null;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
         return false;
@@ -49,6 +50,7 @@ public class UserService {
 
     /**
      * This method creates a user
+     *
      * @param user user to be added to database
      * @return number of rows affected
      */
@@ -61,8 +63,7 @@ public class UserService {
             String hashedPassword = hashService.getHashedValue(user.getPassword(), encodedSalt);
             Integer result = userMapper.insertUser(new User(null, user.getUsername(), encodedSalt, hashedPassword, user.getFirstName(), user.getLastName()));
             return result > 0;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
         return false;

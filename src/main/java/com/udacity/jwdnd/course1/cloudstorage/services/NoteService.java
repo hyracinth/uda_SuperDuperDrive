@@ -13,8 +13,8 @@ import java.util.List;
  */
 @Service
 public class NoteService {
-    private Logger logger = LoggerFactory.getLogger(NoteService.class);
-    private NoteMapper _noteMapper;
+    private final Logger logger = LoggerFactory.getLogger(NoteService.class);
+    private final NoteMapper _noteMapper;
 
     public NoteService(NoteMapper _noteMapper) {
         this._noteMapper = _noteMapper;
@@ -22,6 +22,7 @@ public class NoteService {
 
     /**
      * This method returns a list of notes of the provided username
+     *
      * @param username username to search for notes
      * @return a list of notes of username
      */
@@ -32,6 +33,7 @@ public class NoteService {
     /**
      * The method handles creating and updating notes
      * If the note exist, it will update, else it will insert
+     *
      * @param note note to be updated or inserted
      * @return returns true if inserted / updated
      */
@@ -44,8 +46,7 @@ public class NoteService {
                 result = _noteMapper.insertNote(note);
             }
             return result > 0;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
         return false;
@@ -53,6 +54,7 @@ public class NoteService {
 
     /**
      * This method deletes a note given an noteId
+     *
      * @param noteId note to be deleted
      * @return returns true if delete successful
      */
@@ -60,7 +62,7 @@ public class NoteService {
         try {
             _noteMapper.deleteNote(noteId);
             return true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
             return false;
         }

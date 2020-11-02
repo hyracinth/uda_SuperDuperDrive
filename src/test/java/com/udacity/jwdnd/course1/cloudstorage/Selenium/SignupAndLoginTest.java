@@ -2,7 +2,10 @@ package com.udacity.jwdnd.course1.cloudstorage.Selenium;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -32,7 +35,7 @@ public class SignupAndLoginTest {
 
     @AfterEach
     public void afterEach() {
-        if(this.webDriver != null) {
+        if (this.webDriver != null) {
             this.webDriver.quit();
         }
     }
@@ -89,7 +92,7 @@ public class SignupAndLoginTest {
         this.webDriverWait.until(ExpectedConditions.titleContains("Login"));
         Assertions.assertEquals("Login", webDriver.getTitle());
         Assertions.assertDoesNotThrow(() ->
-            this.webDriver.findElement(By.id("userLoggedOutMsg")));
+                this.webDriver.findElement(By.id("userLoggedOutMsg")));
 
         this.webDriver.get("http://localhost:" + this.port + "/home");
         Assertions.assertEquals("Login", this.webDriver.getTitle());

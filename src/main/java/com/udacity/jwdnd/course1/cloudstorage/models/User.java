@@ -3,7 +3,8 @@ package com.udacity.jwdnd.course1.cloudstorage.models;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 public class User {
     private Integer userId;
     private String username;

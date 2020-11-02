@@ -13,8 +13,8 @@ import java.util.List;
  */
 @Service
 public class FileService {
-    private Logger logger = LoggerFactory.getLogger(FileService.class);
-    private FileMapper _fileMapper;
+    private final Logger logger = LoggerFactory.getLogger(FileService.class);
+    private final FileMapper _fileMapper;
 
     public FileService(FileMapper _fileMapper) {
         this._fileMapper = _fileMapper;
@@ -22,6 +22,7 @@ public class FileService {
 
     /**
      * This method returns a list of files of the provided username
+     *
      * @param username username to search for files
      * @return a list of files of username
      */
@@ -31,14 +32,14 @@ public class FileService {
 
     /**
      * This method returns a file
+     *
      * @param fileId id to search for files
      * @return a file of fileId
      */
     public File getFile(Integer fileId) {
         try {
             return _fileMapper.getFile(fileId);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
         return null;
@@ -46,6 +47,7 @@ public class FileService {
 
     /**
      * This method uploads a file to the database
+     *
      * @param fileIn file to be uploaded
      * @return true/false on success uploaded
      */
@@ -53,8 +55,7 @@ public class FileService {
         try {
             int result = _fileMapper.insertFile(fileIn);
             return result > 0;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
         return false;
@@ -62,6 +63,7 @@ public class FileService {
 
     /**
      * This method deletes a file from the database
+     *
      * @param fileId file to be deleted
      * @return true/false on success delete
      */
@@ -69,7 +71,7 @@ public class FileService {
         try {
             _fileMapper.deleteFile(fileId);
             return true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
             return false;
         }
@@ -77,6 +79,7 @@ public class FileService {
 
     /**
      * This method checks to see if a file exists for a username
+     *
      * @param filename filename to be checked
      * @param username username to be checked
      * @return true / false on file exists
@@ -89,8 +92,7 @@ public class FileService {
                     return true;
                 }
             }
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             logger.error(e.getMessage());
         }
         return false;

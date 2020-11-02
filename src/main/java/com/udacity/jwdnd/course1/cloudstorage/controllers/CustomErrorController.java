@@ -1,6 +1,5 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
-import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -18,9 +17,11 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 @RequestMapping("/error")
 public class CustomErrorController implements ErrorController {
-    private Logger logger = LoggerFactory.getLogger(ErrorController.class);
+    private final Logger logger = LoggerFactory.getLogger(ErrorController.class);
+
     /**
      * This method routes errors to the appropriate error page, defaulting to the plain error page if none found
+     *
      * @param request HttpServletRequest to process
      * @return error page to be displayed
      */
@@ -30,10 +31,9 @@ public class CustomErrorController implements ErrorController {
         if (status != null) {
             Integer statusCode = Integer.valueOf(status.toString());
             logger.warn("HTTP Request error occurred; status code: " + statusCode);
-            if(statusCode == HttpStatus.NOT_FOUND.value()) {
+            if (statusCode == HttpStatus.NOT_FOUND.value()) {
                 return "error/404";
-            }
-            else if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
+            } else if (statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
                 return "error/500";
             }
         }
