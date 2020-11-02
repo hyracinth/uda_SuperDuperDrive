@@ -1,5 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +14,9 @@ import java.util.List;
 @Service
 @Scope("singleton")
 public class ActiveTabService {
+    private final Logger logger = LoggerFactory.getLogger(ActiveTabService.class);
     private String activeTab;
-    private List<String> listTabs;
+    private final List<String> listTabs;
 
     public ActiveTabService() {
         this.activeTab = "files";
@@ -28,11 +31,11 @@ public class ActiveTabService {
     }
 
     public void setActiveTab(String tabIn) {
-        if(listTabs.contains(tabIn)){
+        if (listTabs.contains(tabIn)) {
             this.activeTab = tabIn;
-        }
-        else {
+        } else {
             this.activeTab = listTabs.get(0);
         }
+        logger.info("Active tab updated to: " + this.activeTab);
     }
 }

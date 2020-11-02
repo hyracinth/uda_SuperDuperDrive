@@ -4,12 +4,12 @@ import lombok.Getter;
 
 @Getter
 public class File {
-    private Integer fileId;
-    private String filename;
-    private String contentType;
-    private String fileSize;
-    private Integer userId;
-    private byte[] fileData;
+    private final Integer fileId;
+    private final String filename;
+    private final String contentType;
+    private final String fileSize;
+    private final Integer userId;
+    private final byte[] fileData;
 
     public File(Integer fileId, String filename, String contentType, String fileSize, Integer userId, byte[] fileData) {
         this.fileId = fileId;

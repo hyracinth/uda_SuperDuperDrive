@@ -1,144 +1,162 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap.min.css}">
 
-        <title>Home</title>
-    </head>
-    <body class="p-3 mb-2 bg-light text-black">
-        <div class="container">
-            <div id="logoutDiv">
-                <form th:action="@{/logout}" method="POST">
-                    <button id="logoutButton" type="submit" class="btn btn-secondary float-right">Logout</button>
-                </form>
+    <title>Home</title>
+</head>
+<body class="p-3 mb-2 bg-light text-black">
+<div class="container">
+    <div id="logoutDiv">
+        <form th:action="@{/logout}" method="POST">
+            <button id="logoutButton" type="submit" class="btn btn-secondary float-right">Logout</button>
+        </form>
+    </div>
+    <div id="contentDiv" style="clear: right;">
+        <nav style="clear: right;">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link" id="nav-files-tab" data-toggle="tab" href="#nav-files" role="tab"
+                   aria-controls="nav-files" aria-selected="true">Files</a>
+                <a class="nav-item nav-link" id="nav-notes-tab" data-toggle="tab" href="#nav-notes" role="tab"
+                   aria-controls="nav-notes" aria-selected="false">Notes</a>
+                <a class="nav-item nav-link" id="nav-credentials-tab" data-toggle="tab" href="#nav-credentials"
+                   role="tab" aria-controls="nav-credentials" aria-selected="false">Credentials</a>
             </div>
-            <div id="contentDiv" style="clear: right;">
-                <nav style="clear: right;">
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link" id="nav-files-tab" data-toggle="tab" href="#nav-files" role="tab" aria-controls="nav-files" aria-selected="true">Files</a>
-                        <a class="nav-item nav-link" id="nav-notes-tab" data-toggle="tab" href="#nav-notes" role="tab" aria-controls="nav-notes" aria-selected="false">Notes</a>
-                        <a class="nav-item nav-link" id="nav-credentials-tab" data-toggle="tab" href="#nav-credentials" role="tab" aria-controls="nav-credentials" aria-selected="false">Credentials</a>
-                    </div>
-                </nav>
-                <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
-                        <form th:action="@{/files/upload}" enctype="multipart/form-data" method="POST">
-                            <div class="container">
-                                <div class="row" style="margin: 1em;">
-                                    <div class="col-sm-2">
-                                        <label for="fileUpload">Upload a New File:</label>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="file" class="form-control-file" id="fileUpload" name="fileUpload">
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <button type="submit" class="btn btn-dark">Upload</button>
-                                    </div>
-                                </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
+                <form th:action="@{/files/upload}" enctype="multipart/form-data" method="POST">
+                    <div class="container">
+                        <div class="row" style="margin: 1em;">
+                            <div class="col-sm-2">
+                                <label for="fileUpload">Upload a New File:</label>
                             </div>
-                        </form>
-                        <div class="table-responsive">
-                            <div th:if="${#lists.isEmpty(listFiles)}">
-                                There are no files. Upload some!
+                            <div class="col-sm-6">
+                                <input type="file" class="form-control-file" id="fileUpload" name="fileUpload">
                             </div>
-                            <table th:if="${not #lists.isEmpty(listFiles)}" class="table table-striped" id="fileTable">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 20%" scope="col"></th>
-                                        <th style="width: 75%" scope="col">File Name</th>
-                                        <th style="width: 5%" scope="col">Size</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="currFile : ${listFiles}">
-                                    <td>
-                                        <!--<a target="_blank" class="btn btn-success">View</a>-->
-                                        <a th:href="@{/files/download/{fileId}(fileId=${currFile.getFileId()})}"class="btn btn-success">Download</a>
-                                        <a th:href="@{/files/delete/{fileId}(fileId=${currFile.getFileId()})}" class="btn btn-danger">Delete</a>
-                                    </td>
-                                    <th th:text="${currFile.getFilename()}" scope="row">ExampleFile.txt</th>
-                                    <td th:text="${currFile.getFileSize()}">ExampleFile.txt</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            <div class="col-sm-4">
+                                <button type="submit" class="btn btn-dark">Upload</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
-                        <button id="noteCreateButton" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
-                            + Add a New Note
-                        </button>
-
-                        <div class="table-responsive">
-                            <div id="emptyNotesMsg" th:if="${#lists.isEmpty(listNotes)}">
-                                There are no notes. Create some!
-                            </div>
-                            <table th:if="${not #lists.isEmpty(listNotes)}" class="table table-striped" id="userTable">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 20%" scope="col"></th>
-                                        <th style="width: 20%" scope="col">Title</th>
-                                        <th style="width: 60%" scope="col">Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="currNote : ${listNotes}">
-                                        <td>
-                                            <button id="editNoteButton" th:onclick="javascript: showNoteModal([[${currNote.noteId}]],[[${currNote.noteTitle}]],[[${currNote.noteDescription}]])" type="button" class="btn btn-success">Edit</button>
-                                            <a id="deleteNoteButton" name="deleteNoteButton" th:href="@{/notes/delete/{noteId}(noteId=${currNote.getNoteId()})}" class="btn btn-danger">Delete</a>
-                                        </td>
-                                        <th scope="row" th:text="${currNote.getNoteTitle()}"></th>
-                                        <td th:text="${currNote.getNoteDescription()}"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div th:insert="fragments/noteModal :: noteModal"></div>
+                </form>
+                <div class="table-responsive">
+                    <div th:if="${#lists.isEmpty(listFiles)}">
+                        There are no files. Upload some!
                     </div>
-                    <div class="tab-pane fade" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
-                        <button id="credentialCreateButton" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
-                            + Add a New Credential
-                        </button>
-
-                        <div class="table-responsive">
-                            <div id="emptyCredentialsMsg" th:if="${#lists.isEmpty(listCredentials)}">
-                                There are no credentials saved. Save some!
-                            </div>
-                            <table th:if="${not #lists.isEmpty(listCredentials)}" class="table table-striped" id="credentialTable">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 20%" scope="col"></th>
-                                        <th style="width: 35%" scope="col">URL</th>
-                                        <th style="width: 20%" scope="col">Username</th>
-                                        <th style="width: 25%" scope="col">Password</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="currCred : ${listCredentials}">
-                                    <td>
-                                        <button id="editCredentialButton" th:onclick="javascript: showCredentialModal([[${currCred.getCredentialId()}]],[[${currCred.getUrl()}]],[[${currCred.getUsername()}]],[[${encryptionService.decryptValue(currCred.getPassword(), currCred.getKey())}]])"  type="button" class="btn btn-success">Edit</button>
-                                        <a id="deleteCredentialButton" th:href="@{/credentials/delete/{credId}(credId=${currCred.getCredentialId()})}" class="btn btn-danger">Delete</a>
-                                    </td>
-                                    <th th:text="${currCred.getUrl()}" scope="row">Example Credential URL</th>
-                                    <td th:text="${currCred.getUsername()}">Example Credential Username</td>
-                                    <td th:text="${currCred.getPassword()}">Example Credential Password</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div th:insert="fragments/credentialModal :: credentialModal"></div>
-                    </div>
+                    <table th:if="${not #lists.isEmpty(listFiles)}" class="table table-striped" id="fileTable">
+                        <thead>
+                        <tr>
+                            <th style="width: 20%" scope="col"></th>
+                            <th style="width: 75%" scope="col">File Name</th>
+                            <th style="width: 5%" scope="col">Size</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="currFile : ${listFiles}">
+                            <td>
+                                <!--<a target="_blank" class="btn btn-success">View</a>-->
+                                <a th:href="@{/files/download/{fileId}(fileId=${currFile.getFileId()})}"
+                                   class="btn btn-success">Download</a>
+                                <a th:href="@{/files/delete/{fileId}(fileId=${currFile.getFileId()})}"
+                                   class="btn btn-danger">Delete</a>
+                            </td>
+                            <th th:text="${currFile.getFilename()}" scope="row">ExampleFile.txt</th>
+                            <td th:text="${currFile.getFileSize()}">ExampleFile.txt</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
+            <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
+                <button id="noteCreateButton" style="margin: 0.25em;" type="button" class="btn btn-info float-right"
+                        onclick="showNoteModal()">
+                    + Add a New Note
+                </button>
+
+                <div class="table-responsive">
+                    <div id="emptyNotesMsg" th:if="${#lists.isEmpty(listNotes)}">
+                        There are no notes. Create some!
+                    </div>
+                    <table th:if="${not #lists.isEmpty(listNotes)}" class="table table-striped" id="userTable">
+                        <thead>
+                        <tr>
+                            <th style="width: 20%" scope="col"></th>
+                            <th style="width: 20%" scope="col">Title</th>
+                            <th style="width: 60%" scope="col">Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="currNote : ${listNotes}">
+                            <td>
+                                <button id="editNoteButton"
+                                        th:onclick="javascript: showNoteModal([[${currNote.noteId}]],[[${currNote.noteTitle}]],[[${currNote.noteDescription}]])"
+                                        type="button" class="btn btn-success">Edit
+                                </button>
+                                <a id="deleteNoteButton" name="deleteNoteButton"
+                                   th:href="@{/notes/delete/{noteId}(noteId=${currNote.getNoteId()})}"
+                                   class="btn btn-danger">Delete</a>
+                            </td>
+                            <th scope="row" th:text="${currNote.getNoteTitle()}"></th>
+                            <td th:text="${currNote.getNoteDescription()}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:insert="fragments/noteModal :: noteModal"></div>
+            </div>
+            <div class="tab-pane fade" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
+                <button id="credentialCreateButton" style="margin: 0.25em;" type="button"
+                        class="btn btn-info float-right" onclick="showCredentialModal()">
+                    + Add a New Credential
+                </button>
+
+                <div class="table-responsive">
+                    <div id="emptyCredentialsMsg" th:if="${#lists.isEmpty(listCredentials)}">
+                        There are no credentials saved. Save some!
+                    </div>
+                    <table th:if="${not #lists.isEmpty(listCredentials)}" class="table table-striped"
+                           id="credentialTable">
+                        <thead>
+                        <tr>
+                            <th style="width: 20%" scope="col"></th>
+                            <th style="width: 35%" scope="col">URL</th>
+                            <th style="width: 20%" scope="col">Username</th>
+                            <th style="width: 25%" scope="col">Password</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="currCred : ${listCredentials}">
+                            <td>
+                                <button id="editCredentialButton"
+                                        th:onclick="javascript: showCredentialModal([[${currCred.getCredentialId()}]],[[${currCred.getUrl()}]],[[${currCred.getUsername()}]],[[${encryptionService.decryptValue(currCred.getPassword(), currCred.getKey())}]])"
+                                        type="button" class="btn btn-success">Edit
+                                </button>
+                                <a id="deleteCredentialButton"
+                                   th:href="@{/credentials/delete/{credId}(credId=${currCred.getCredentialId()})}"
+                                   class="btn btn-danger">Delete</a>
+                            </td>
+                            <th th:text="${currCred.getUrl()}" scope="row">Example Credential URL</th>
+                            <td th:text="${currCred.getUsername()}">Example Credential Username</td>
+                            <td th:text="${currCred.getPassword()}">Example Credential Password</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div th:insert="fragments/credentialModal :: credentialModal"></div>
+            </div>
         </div>
+    </div>
+</div>
 
-        <script th:src="@{/js/jquery-slim.min.js}"></script>
-        <script th:src="@{/js/popper.min.js}"></script>
-        <script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery-slim.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
 
-        <script type="text/javascript">
+<script type="text/javascript">
             const activeTabModel = "[[${activeTab}]]";
             switch(activeTabModel) {
                 case 'files':
@@ -171,13 +189,8 @@
                 $('#credential-password').val(password ? password : '');
                 $('#credentialModal').modal('show');
             }
-        </script>
-        <div th:insert="fragments/footer :: footer" class="footer"></div>
-    </body>
-    <footer class="page-footer font-small blue">
-        <div class="footer-copyright text-center py-3">© 2020 Copyright:
-            <a href="https://mdbootstrap.com/"> MDBootstrap.com</a>
-            <div th:text="${activeTab}"></div>
-        </div>
-    </footer>
+
+</script>
+<div th:insert="fragments/footer :: footer" class="footer"></div>
+</body>
 </html>

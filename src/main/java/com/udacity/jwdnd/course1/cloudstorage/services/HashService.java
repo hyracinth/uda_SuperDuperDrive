@@ -16,10 +16,11 @@ import java.util.Base64;
  */
 @Component
 public class HashService {
-    private Logger logger = LoggerFactory.getLogger(HashService.class);
+    private final Logger logger = LoggerFactory.getLogger(HashService.class);
 
     /**
      * This method hashes a value given a salt
+     *
      * @param data value to be hashed
      * @param salt salt to be used for hashing
      * @return hashed value

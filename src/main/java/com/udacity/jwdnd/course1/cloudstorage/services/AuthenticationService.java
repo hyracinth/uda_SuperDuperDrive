@@ -2,6 +2,8 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 
 import com.udacity.jwdnd.course1.cloudstorage.mappers.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,8 +17,9 @@ import java.util.ArrayList;
  */
 @Service
 public class AuthenticationService implements AuthenticationProvider {
-    private UserMapper userMapper;
-    private HashService hashService;
+    private final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
+    private final UserMapper userMapper;
+    private final HashService hashService;
 
     public AuthenticationService(UserMapper userMapper, HashService hashService) {
         this.userMapper = userMapper;
@@ -25,22 +28,27 @@ public class AuthenticationService implements AuthenticationProvider {
 
     /**
      * This method handles creating a token for a authorized user
+     *
      * @param authentication Authentication object from springframework.security.core
      * @return a token for authorized user
      * @throws AuthenticationException if not authorized
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName();
-        String password = authentication.getCredentials().toString();
+        try {
+            String username = authentication.getName();
+            String password = authentication.getCredentials().toString();
 
-        User user = userMapper.getUser(username);
-        if (user != null) {
-            String encodedSalt = user.getSalt();
-            String hashedPassword = hashService.getHashedValue(password, encodedSalt);
-            if (user.getPassword().equals(hashedPassword)) {
-                return new UsernamePasswordAuthenticationToken(username, password, new ArrayList<>());
+            User user = userMapper.getUser(username);
+            if (user != null) {
+                String encodedSalt = user.getSalt();
+                String hashedPassword = hashService.getHashedValue(password, encodedSalt);
+                if (user.getPassword().equals(hashedPassword)) {
+                    return new UsernamePasswordAuthenticationToken(username, password, new ArrayList<>());
+                }
             }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
         return null;
     }

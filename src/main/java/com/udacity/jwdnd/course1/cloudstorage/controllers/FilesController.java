@@ -39,9 +39,10 @@ public class FilesController {
      * This method handles the logic for uploading a file
      * It takes a MultipartFile object from HTML side and sends it to the service to be handled
      * The method also sets the active tab and then sends an updated list of files
+     *
      * @param fileIn file from user to be uploaded
-     * @param auth Authentication object to get user details
-     * @param model Model object for data binding
+     * @param auth   Authentication object to get user details
+     * @param model  Model object for data binding
      * @return redirects to results page to show user status
      */
     @PostMapping(value = "/files/upload")
@@ -49,11 +50,11 @@ public class FilesController {
                              Authentication auth,
                              Model model) throws IOException {
         activeTabService.setActiveTab(SDDConstants.TAB_FILES);
-        if(fileIn.isEmpty()) {
+        if (fileIn.isEmpty()) {
             return "redirect:/result?success=" + false + "&errorType=1";
         }
 
-        if(fileService.doesFileExist(fileIn.getOriginalFilename(), auth.getName())) {
+        if (fileService.doesFileExist(fileIn.getOriginalFilename(), auth.getName())) {
             return "redirect:/result?success=" + false + "&errorType=2";
         }
         Boolean result = fileService.uploadFile(new File(
@@ -69,10 +70,11 @@ public class FilesController {
     }
 
     /**
-     This method takes an id from the HTML and pass it to the service to be deleted
+     * This method takes an id from the HTML and pass it to the service to be deleted
+     *
      * @param fileId id of note to be deleted
-     * @param auth Authentication object to get user details
-     * @param model Model object for data binding
+     * @param auth   Authentication object to get user details
+     * @param model  Model object for data binding
      * @return redirects to results page to show user status
      */
     @GetMapping("/files/delete/{fileId}")
@@ -87,15 +89,16 @@ public class FilesController {
 
     /**
      * This method downloads the selected file
+     *
      * @param fileId file to be downloaded
-     * @param auth Authentication object to get user details
-     * @param model Model object for data binding
+     * @param auth   Authentication object to get user details
+     * @param model  Model object for data binding
      * @return ResponseEntity to be handled by browser
      */
     @GetMapping("/files/download/{fileId}")
     public ResponseEntity download(@PathVariable Integer fileId,
                                    Authentication auth,
-                                   Model model){
+                                   Model model) {
         activeTabService.setActiveTab(SDDConstants.TAB_FILES);
         File selectedFile = fileService.getFile(fileId);
 
