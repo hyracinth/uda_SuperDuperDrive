@@ -2,6 +2,8 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 
 import com.udacity.jwdnd.course1.cloudstorage.mappers.FileMapper;
 import com.udacity.jwdnd.course1.cloudstorage.models.File;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.List;
  */
 @Service
 public class FileService {
+    private Logger logger = LoggerFactory.getLogger(FileService.class);
     private FileMapper _fileMapper;
 
     public FileService(FileMapper _fileMapper) {
@@ -32,8 +35,13 @@ public class FileService {
      * @return a file of fileId
      */
     public File getFile(Integer fileId) {
-
-        return _fileMapper.getFile(fileId);
+        try {
+            return _fileMapper.getFile(fileId);
+        }
+        catch(Exception e) {
+            logger.error(e.getMessage());
+        }
+        return null;
     }
 
     /**
@@ -42,8 +50,14 @@ public class FileService {
      * @return true/false on success uploaded
      */
     public Boolean uploadFile(File fileIn) {
-        int result = _fileMapper.insertFile(fileIn);
-        return result > 0;
+        try {
+            int result = _fileMapper.insertFile(fileIn);
+            return result > 0;
+        }
+        catch(Exception e) {
+            logger.error(e.getMessage());
+        }
+        return false;
     }
 
     /**
@@ -56,7 +70,7 @@ public class FileService {
             _fileMapper.deleteFile(fileId);
             return true;
         } catch(Exception e) {
-            System.out.println("Delete failed");
+            logger.error(e.getMessage());
             return false;
         }
     }
@@ -68,11 +82,16 @@ public class FileService {
      * @return true / false on file exists
      */
     public Boolean doesFileExist(String filename, String username) {
-        List<File> listFiles = getFiles(username);
-        for(File currFile : listFiles) {
-            if(currFile.getFilename().equals(filename)) {
-                return true;
+        try {
+            List<File> listFiles = getFiles(username);
+            for (File currFile : listFiles) {
+                if (currFile.getFilename().equals(filename)) {
+                    return true;
+                }
             }
+        }
+        catch(Exception e) {
+            logger.error(e.getMessage());
         }
         return false;
     }

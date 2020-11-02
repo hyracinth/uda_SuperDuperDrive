@@ -2,6 +2,8 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 
 import com.udacity.jwdnd.course1.cloudstorage.mappers.NoteMapper;
 import com.udacity.jwdnd.course1.cloudstorage.models.Note;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.List;
  */
 @Service
 public class NoteService {
+    private Logger logger = LoggerFactory.getLogger(NoteService.class);
     private NoteMapper _noteMapper;
 
     public NoteService(NoteMapper _noteMapper) {
@@ -33,14 +36,19 @@ public class NoteService {
      * @return returns true if inserted / updated
      */
     public Boolean createUpdateNote(Note note) {
-        int result;
-        if (note.getNoteId() != null) {
-            result = _noteMapper.updateNote(note);
+        try {
+            int result;
+            if (note.getNoteId() != null) {
+                result = _noteMapper.updateNote(note);
+            } else {
+                result = _noteMapper.insertNote(note);
+            }
+            return result > 0;
         }
-        else {
-            result = _noteMapper.insertNote(note);
+        catch (Exception e) {
+            logger.error(e.getMessage());
         }
-        return result > 0;
+        return false;
     }
 
     /**
@@ -53,7 +61,7 @@ public class NoteService {
             _noteMapper.deleteNote(noteId);
             return true;
         } catch(Exception e) {
-            System.out.println("Delete failed");
+            logger.error(e.getMessage());
             return false;
         }
     }

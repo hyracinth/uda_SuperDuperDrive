@@ -2,6 +2,8 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 
 import com.udacity.jwdnd.course1.cloudstorage.mappers.CredentialMapper;
 import com.udacity.jwdnd.course1.cloudstorage.models.Credential;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -13,6 +15,7 @@ import java.util.List;
  */
 @Service
 public class CredentialService {
+    private Logger logger = LoggerFactory.getLogger(CredentialService.class);
     private CredentialMapper _credentialMapper;
     private EncryptionService _encryptionService;
 
@@ -37,24 +40,28 @@ public class CredentialService {
      * @return returns true if inserted / updated
      */
     public Boolean createUpdateCredential(Credential credIn) {
-        Integer result = 0;
-        SecureRandom random = new SecureRandom();
-        byte[] key = new byte[16];
-        random.nextBytes(key);
-        String encodedKey = Base64.getEncoder().encodeToString(key);
-        String encryptedPassword = _encryptionService.encryptValue(credIn.getPassword(), encodedKey);
+        try {
+            Integer result = 0;
+            SecureRandom random = new SecureRandom();
+            byte[] key = new byte[16];
+            random.nextBytes(key);
+            String encodedKey = Base64.getEncoder().encodeToString(key);
+            String encryptedPassword = _encryptionService.encryptValue(credIn.getPassword(), encodedKey);
 
-        credIn.setKey(encodedKey);
-        credIn.setPassword(encryptedPassword);
+            credIn.setKey(encodedKey);
+            credIn.setPassword(encryptedPassword);
 
-        if(credIn.getCredentialId() != null) {
-            result = this._credentialMapper.updateCredential(credIn);
+            if (credIn.getCredentialId() != null) {
+                result = this._credentialMapper.updateCredential(credIn);
+            } else {
+                result = this._credentialMapper.insertCredential(credIn);
+            }
+            return result > 0;
         }
-        else {
-            result = this._credentialMapper.insertCredential(credIn);
+        catch(Exception e) {
+            logger.error(e.getMessage());
         }
-
-        return result > 0;
+        return false;
     }
 
     /**
@@ -67,8 +74,8 @@ public class CredentialService {
             _credentialMapper.deleteCredential(credId);
             return true;
         } catch(Exception e) {
-            System.out.println("Delete failed");
-            return false;
+            logger.error(e.getMessage());
         }
+        return false;
     }
 }

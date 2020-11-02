@@ -1,7 +1,10 @@
 package com.udacity.jwdnd.course1.cloudstorage.controllers;
 
 import com.udacity.jwdnd.course1.cloudstorage.models.User;
+import com.udacity.jwdnd.course1.cloudstorage.services.ActiveTabService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 @Controller
 public class SignupController {
+    private UserService userService;
 
-    private UserService _userService;
-
-    public SignupController(UserService _userService) {
-        this._userService = _userService;
+    public SignupController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/signup")
@@ -38,13 +40,12 @@ public class SignupController {
     public String postSignupUser(@ModelAttribute User user, Model model) {
         String signupFailMsg = null;
 
-        if(!_userService.isUserAvailable(user.getUsername())) {
+        if(!userService.isUserAvailable(user.getUsername())) {
             signupFailMsg = "Username not available. Please choose another";
         }
 
         if(signupFailMsg == null) {
-            int rowsAdded =_userService.createUser(user);
-            if (rowsAdded < 0) {
+            if (!userService.createUser(user)) {
                 signupFailMsg = "There was an error during sign up, please try again.";
             }
         }
